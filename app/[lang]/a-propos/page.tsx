@@ -8,6 +8,7 @@ import { Eyebrow, SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { SOCIAL_ICONS } from "@/components/ui/Icons";
 import { AskKoud } from "@/components/chat/AskKoud";
+import { FEATURES } from "@/lib/features";
 import { SITE } from "@/content/site";
 import { SITE_EN } from "@/content/en/other";
 import { getCourses, getExperience, getSkillGroups } from "@/lib/content";
@@ -180,20 +181,24 @@ export default async function AboutPage({ params }: LangParams) {
       </section>
 
       {/* ── Video + CTA ────────────────────── */}
+      {(FEATURES.video || FEATURES.koudAI) && (
       <section className="container-page pt-24 sm:pt-32">
         <div className="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-10">
           <div>
             <h2 className="heading-2">{t.moreTitle}</h2>
-            <p className="mt-3 max-w-lg text-muted">{t.moreLead}</p>
+            <p className="mt-3 max-w-lg text-muted">{[FEATURES.video && t.moreLeadVideo, FEATURES.koudAI && t.moreLeadAI].filter(Boolean).join(" ")}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <LinkButton href={href(locale, "/video")} variant="ghost" size="lg" icon={<Play className="size-4" />}>
-              {t.video}
-            </LinkButton>
-            <AskKoud question={t.askBackground} />
+            {FEATURES.video && (
+              <LinkButton href={href(locale, "/video")} variant="ghost" size="lg" icon={<Play className="size-4" />}>
+                {t.video}
+              </LinkButton>
+            )}
+            {FEATURES.koudAI && <AskKoud question={t.askBackground} />}
           </div>
         </div>
       </section>
+      )}
     </>
   );
 }

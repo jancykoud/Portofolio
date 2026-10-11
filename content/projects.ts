@@ -9,6 +9,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "declic",
     name: "DECLIC",
+    highlight: 1,
     formerName: "FROST-FORMS",
     tagline: "Plateforme de déclaration et de gestion d'instruments scientifiques pour la recherche environnementale.",
     summary:
@@ -100,6 +101,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "wmbia",
     name: "Wmbia",
+    highlight: 5,
     tagline: "Assistant de recherche sémantique fondé exclusivement sur un corpus de textes religieux.",
     summary:
       "Un moteur de recherche qui retrouve un passage à partir de son sens, pas de ses mots exacts. Indexation vectorielle, API Python et interface React volontairement minimaliste.",
@@ -136,6 +138,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "akili",
     name: "Akili",
+    highlight: 3,
     formerName: "EduConnect",
     tagline: "Gestion scolaire multi-établissements pensée pour l'Afrique.",
     summary:
@@ -221,6 +224,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "nzoto",
     name: "Nzoto",
+    highlight: 4,
     tagline: "Trouver un médecin vérifié au Congo-Brazzaville, et garder son dossier de santé avec soi.",
     summary:
       "Plateforme de santé : annuaire de praticiens dont les justificatifs sont contrôlés, dossier médical personnel et carte d'urgence QR. Réservation de consultation avec règlement par mobile money ou au cabinet, depuis n'importe quel navigateur.",
@@ -283,6 +287,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "esge-services",
     name: "ESGE Services",
+    highlight: 2,
     tagline: "Plateforme de services à domicile : de la demande de devis à la facture, chaque étape suivie en ligne.",
     summary:
       "Mission client pour ESGE GLOBAL COMMERCE : une plateforme qui organise sept familles de services à domicile (ménage, jardinage, bricolage, repas, courses, linge, vigilance du domicile). Le particulier décrit son besoin, reçoit un devis, l'accepte, suit la prestation en direct et retrouve ses documents ; l'équipe et les intervenants ont chacun leur espace.",
@@ -317,7 +322,6 @@ export const PROJECTS: Project[] = [
       { src: "/projects/esge-services/desktop-03.webp", alt: "Journal de la maison : compte rendu d'intervention avec tâches faites et photos", caption: "Journal de la maison : compte rendu et photos après chaque passage.", device: "desktop", width: 1440, height: 900 },
       { src: "/projects/esge-services/desktop-04.webp", alt: "Carnet de la maison : consignes du client pour les intervenants", caption: "Carnet de la maison : les consignes du client, relues à chaque intervention.", device: "desktop", width: 1440, height: 900 },
       { src: "/projects/esge-services/mobile-01.webp", alt: "Journal de la maison sur mobile", caption: "Journal de la maison sur mobile.", device: "mobile", width: 390, height: 843 },
-      { src: "/projects/esge-services/mobile-02.webp", alt: "Carte de suivi « Camille est en route »", caption: "Suivi en direct : l'intervenant est en route.", device: "mobile", width: 358, height: 294 },
     ],
     links: [],
     cover: { hue: "#14532d", motif: "stack" },

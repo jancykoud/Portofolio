@@ -5,11 +5,13 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, ImageOff, Lock } from "lucide-reac
 import { ArchitectureDiagram } from "@/components/projects/ArchitectureDiagram";
 import { CaseStudyNav } from "@/components/projects/CaseStudyNav";
 import { Gallery } from "@/components/projects/Gallery";
+import { hostOf } from "@/components/projects/DeviceFrame";
 import { ProjectCover } from "@/components/projects/ProjectCover";
 import { LinkButton } from "@/components/ui/Button";
 import { Eyebrow, Tag } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { AskKoud } from "@/components/chat/AskKoud";
+import { FEATURES } from "@/lib/features";
 import { getAdjacentProject, getProject, getProjects } from "@/lib/content";
 import { href, LOCALES } from "@/lib/i18n/routing";
 import { alternates, resolveLocale } from "@/lib/i18n/server";
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${project.name} — ${t.caseStudy.caseStudy}`,
     description: `${project.tagline} ${project.summary}`.slice(0, 300),
     alternates: alternates(locale, `/projets/${project.slug}`),
-    openGraph: { title: `${project.name} — ${SITE.name}`, description: project.tagline },
+    openGraph: { title: `${project.name} — ${SITE.name}`, description: project.tagline, type: "article" },
   };
 }
 
@@ -183,7 +185,7 @@ export default async function ProjectPage({ params }: Props) {
 
         <Section id="interfaces" eyebrow={`${num("interfaces")} · ${t.sections.interfaces}`} title={t.titles.interfaces}>
           {project.screens.length > 0 ? (
-            <Gallery screens={project.screens} projectName={project.name} />
+            <Gallery screens={project.screens} projectName={project.name} host={hostOf(project)} />
           ) : (
             <div className="flex items-start gap-4 rounded-[var(--radius-lg)] border border-dashed border-line-strong p-6">
               <ImageOff className="mt-0.5 size-5 shrink-0 text-muted" aria-hidden />
@@ -262,7 +264,7 @@ export default async function ProjectPage({ params }: Props) {
 
         <div className="flex flex-wrap items-center gap-3 rounded-[var(--radius-lg)] border border-line bg-surface p-6">
           <p className="mr-auto text-sm text-muted">{t.question(project.name)}</p>
-          <AskKoud question={t.askAbout(project.name)} />
+          {FEATURES.koudAI && <AskKoud question={t.askAbout(project.name)} />}
           <LinkButton href={href(locale, "/contact")} variant="ghost">
             {dict.nav.contactCta}
           </LinkButton>

@@ -197,7 +197,6 @@ export const PROJECTS_EN: Record<string, ProjectTranslation> = {
       { alt: "House journal: visit report with completed tasks and photos", caption: "House journal: report and photos after each visit." },
       { alt: "House notebook: customer instructions for service staff", caption: "House notebook: the customer's instructions, reviewed at every visit." },
       { alt: "House journal on mobile", caption: "House journal on mobile." },
-      { alt: "Tracking card “Camille is on the way”", caption: "Live tracking: the staff member is on the way." },
     ],
   },
   "orient-ex": {

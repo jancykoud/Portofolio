@@ -7,9 +7,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Screen } from "@/content/types";
 import { cn } from "@/lib/utils";
 import { useDict } from "@/lib/i18n/client";
+import { BrowserBar, PhoneFrame } from "./DeviceFrame";
 
 
-export function Gallery({ screens, projectName }: { screens: Screen[]; projectName: string }) {
+export function Gallery({ screens, projectName, host }: { screens: Screen[]; projectName: string; host?: string }) {
   const t = useDict().gallery;
   const DEVICE_LABEL = t.devices;
   const devices = useMemo(() => (["desktop", "tablet", "mobile"] as const).filter((d) => screens.some((s) => s.device === d)), [screens]);
@@ -74,16 +75,34 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
         tabIndex={0}
         onKeyDown={onKey}
       >
-        <div className={cn("relative", isMobile ? "aspect-[3/4] sm:aspect-[4/3]" : "aspect-[16/9]")}>
-          <Image
-            key={current.src}
-            src={current.src}
-            alt={current.alt}
-            fill
-            sizes="(min-width: 1280px) 1200px, 100vw"
-            className={cn("animate-[rise-in_500ms_var(--ease-out-expo)]", isMobile ? "object-contain p-4" : "object-cover object-top")}
-          />
-        </div>
+        {isMobile ? (
+          <div className="tech-grid relative flex aspect-[4/5] items-center justify-center py-6 sm:aspect-[16/10]">
+            <PhoneFrame className="h-full">
+              <Image
+                key={current.src}
+                src={current.src}
+                alt={current.alt}
+                fill
+                sizes="320px"
+                className="animate-[rise-in_500ms_var(--ease-out-expo)] object-cover object-top"
+              />
+            </PhoneFrame>
+          </div>
+        ) : (
+          <>
+            <BrowserBar host={host} />
+            <div className="relative aspect-[16/10]">
+              <Image
+                key={current.src}
+                src={current.src}
+                alt={current.alt}
+                fill
+                sizes="(min-width: 1280px) 1200px, 100vw"
+                className="animate-[rise-in_500ms_var(--ease-out-expo)] object-cover object-top"
+              />
+            </div>
+          </>
+        )}
         {list.length > 1 && (
           <>
             <button onClick={() => go(-1)} className="glass absolute top-1/2 left-3 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong" aria-label={t.prev}>

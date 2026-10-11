@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ReadingProgress } from "@/components/mdx/ReadingProgress";
 import { Toc } from "@/components/mdx/Toc";
 import { AskKoud } from "@/components/chat/AskKoud";
+import { FEATURES } from "@/lib/features";
 import { getAllPosts, getPost } from "@/lib/blog";
 import { SITE } from "@/content/site";
 import { formatDate } from "@/lib/utils";
@@ -101,12 +102,14 @@ export default async function PostPage({ params }: Props) {
           <aside className="hidden lg:block">
             <div className="sticky top-28 space-y-8">
               <Toc headings={headings} title={t.toc} />
+{FEATURES.koudAI && (
               <div className="rounded-[var(--radius)] border border-line p-4">
                 <p className="text-sm text-muted">{t.askQuestion}</p>
                 <div className="mt-3">
                   <AskKoud question={t.askSummary(meta.title)} />
                 </div>
               </div>
+              )}
             </div>
           </aside>
         </div>

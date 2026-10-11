@@ -5,6 +5,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { AskKoud } from "@/components/chat/AskKoud";
+import { FEATURES } from "@/lib/features";
 import { getServices } from "@/lib/content";
 import { href } from "@/lib/i18n/routing";
 import { alternates, resolveLocale, type LangParams } from "@/lib/i18n/server";
@@ -115,7 +116,7 @@ export default async function ServicesPage({ params }: LangParams) {
           <LinkButton href={`${href(locale, "/contact")}?sujet=mission`} size="lg" icon={<ArrowRight className="size-4" />}>
             {t.describe}
           </LinkButton>
-          <AskKoud question={t.askService} label={t.findService} />
+          {FEATURES.koudAI && <AskKoud question={t.askService} label={t.findService} />}
         </div>
       </section>
     </div>

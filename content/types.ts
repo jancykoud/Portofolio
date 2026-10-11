@@ -60,6 +60,8 @@ export type Project = {
   /** Typographic cover colours when no real screenshot exists. */
   cover: { hue: string; motif: "grid" | "orbit" | "wave" | "stack" | "nodes" };
   featured?: boolean;
+  /** Rank among flagship projects (1 = first). Others appear in the compact list. */
+  highlight?: number;
   /** Drafts are excluded from pages, sitemap and KOUD AI. */
   draft?: boolean;
   /** Content still expected from the owner (internal, never rendered). */

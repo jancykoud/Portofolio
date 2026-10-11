@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Project } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { BrowserBar, PhoneFrame } from "./DeviceFrame";
 
 function Motif({ motif, hue }: { motif: Project["cover"]["motif"]; hue: string }) {
   const stroke = { stroke: hue, strokeOpacity: 0.55, strokeWidth: 0.6, fill: "none" } as const;
@@ -76,8 +77,10 @@ export function ProjectCover({
   className,
   priority,
   sizes = "(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw",
+  compact,
 }: {
   project: Project;
+  compact?: boolean;
   className?: string;
   priority?: boolean;
   sizes?: string;
@@ -85,18 +88,26 @@ export function ProjectCover({
   const shot = project.screens[0];
   return (
     <div className={cn("relative overflow-hidden bg-surface-2", className)}>
-      {shot ? (
-        <Image
-          src={shot.src}
-          alt={shot.alt}
-          fill
-          priority={priority}
-          sizes={sizes}
-          className={cn(
-            "transition-transform duration-700 ease-out-expo group-hover:scale-[1.035]",
-            shot.device === "mobile" ? "object-contain p-4" : "object-cover object-top",
-          )}
-        />
+      {shot && shot.device === "mobile" ? (
+        <div className="tech-grid absolute inset-0 flex items-center justify-center py-[5%]">
+          <PhoneFrame className="h-full transition-transform duration-700 ease-out-expo group-hover:-translate-y-1">
+            <Image src={shot.src} alt={shot.alt} fill priority={priority} sizes="240px" className="object-cover object-top" />
+          </PhoneFrame>
+        </div>
+      ) : shot ? (
+        <div className="absolute inset-0 flex flex-col">
+          {!compact && <BrowserBar size="sm" />}
+          <div className="relative flex-1 overflow-hidden">
+            <Image
+              src={shot.src}
+              alt={shot.alt}
+              fill
+              priority={priority}
+              sizes={sizes}
+              className="object-cover object-top transition-transform duration-700 ease-out-expo group-hover:scale-[1.035]"
+            />
+          </div>
+        </div>
       ) : (
         <div className="absolute inset-0" aria-hidden>
           <div
@@ -106,9 +117,11 @@ export function ProjectCover({
           <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]">
             <Motif motif={project.cover.motif} hue={project.cover.hue} />
           </svg>
-          <span className="absolute bottom-[8%] left-[6%] text-[clamp(1.6rem,5vw,3.2rem)] leading-none font-semibold tracking-[-0.05em] text-fg/90">
-            {project.name}
-          </span>
+          {!compact && (
+            <span className="absolute bottom-[8%] left-[6%] text-[clamp(1.6rem,5vw,3.2rem)] leading-none font-semibold tracking-[-0.05em] text-fg/90">
+              {project.name}
+            </span>
+          )}
         </div>
       )}
     </div>

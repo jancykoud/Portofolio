@@ -5,6 +5,7 @@ import { SOCIAL_ICONS } from "@/components/ui/Icons";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { href, type Locale } from "@/lib/i18n/routing";
 import { SITE_EN } from "@/content/en/other";
+import { FEATURES } from "@/lib/features";
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   const t = getDictionary(locale);
@@ -35,11 +36,13 @@ export function SiteFooter({ locale }: { locale: Locale }) {
                   </Link>
                 </li>
               ))}
+{FEATURES.video && (
               <li>
                 <Link href={href(locale, "/video")} className="inline-flex min-h-10 items-center text-sm hover:text-accent-fg">
                   {t.nav.video}
                 </Link>
               </li>
+              )}
             </ul>
           </nav>
 

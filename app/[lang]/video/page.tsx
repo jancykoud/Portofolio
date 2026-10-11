@@ -5,13 +5,20 @@ import { LinkButton } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { INTRO_VIDEO } from "@/content/video";
+import { FEATURES } from "@/lib/features";
 import { getStoryboard } from "@/lib/content";
 import { href } from "@/lib/i18n/routing";
 import { alternates, resolveLocale, type LangParams } from "@/lib/i18n/server";
 
 export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
   const { locale, t } = await resolveLocale(params);
-  return { title: t.video.metaTitle, description: t.video.metaDescription, alternates: alternates(locale, "/video") };
+  return {
+    title: t.video.metaTitle,
+    description: t.video.metaDescription,
+    alternates: alternates(locale, "/video"),
+    // Not promoted or indexed until the video exists.
+    robots: FEATURES.video ? undefined : { index: false, follow: true },
+  };
 }
 
 export default async function VideoPage({ params }: LangParams) {

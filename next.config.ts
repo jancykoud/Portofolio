@@ -29,7 +29,8 @@ const nextConfig: NextConfig = {
       .filter(([fr, en]) => fr !== en)
       .flatMap(([fr, en]) => [
         { source: `/en/${fr}`, destination: `/en/${en}`, permanent: true },
-        { source: `/en/${fr}/:path*`, destination: `/en/${en}/:path*`, permanent: true },
+        // Metadata images keep their internal URL (that is what Next.js emits in og:image).
+        { source: `/en/${fr}/:path((?!.*opengraph-image).*)`, destination: `/en/${en}/:path`, permanent: true },
       ]);
     return [
       // Legacy URLs of the previous site
@@ -39,7 +40,7 @@ const nextConfig: NextConfig = {
       { source: "/fun", destination: "/a-propos", permanent: true },
       // The internal /fr prefix is never public
       { source: "/fr", destination: "/", permanent: true },
-      { source: "/fr/:path((?!opengraph-image).*)", destination: "/:path", permanent: true },
+      { source: "/fr/:path((?!.*opengraph-image).*)", destination: "/:path", permanent: true },
       ...enInternal,
     ];
   },
@@ -53,7 +54,7 @@ const nextConfig: NextConfig = {
     return {
       beforeFiles: [],
       // Checked after static files and routes (/api, sitemap, public assets) but before dynamic routes.
-      afterFiles: [...enRewrites, { source: "/", destination: "/fr" }, { source: "/:path((?!en(?:/|$)|fr/opengraph-image).*)", destination: "/fr/:path" }],
+      afterFiles: [...enRewrites, { source: "/", destination: "/fr" }, { source: "/:path((?!en(?:/|$)|fr(?:/|$)).*)", destination: "/fr/:path" }],
       fallback: [],
     };
   },

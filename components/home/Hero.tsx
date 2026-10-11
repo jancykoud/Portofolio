@@ -3,6 +3,7 @@ import { ArrowRight, Play } from "lucide-react";
 import { LinkButton } from "@/components/ui/Button";
 import { HeroVisual } from "./HeroVisual";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { FEATURES } from "@/lib/features";
 import { href, type Locale } from "@/lib/i18n/routing";
 
 
@@ -56,12 +57,14 @@ export function Hero({ locale }: { locale: Locale }) {
             <LinkButton href={href(locale, "/services")} variant="ghost" size="lg">
               {t.ctaServices}
             </LinkButton>
+{FEATURES.video && (
             <Link href={href(locale, "/video")} className="group inline-flex min-h-12 items-center gap-3 px-2 text-sm font-medium">
               <span className="inline-flex size-9 items-center justify-center rounded-full border border-line-strong transition-colors group-hover:border-fg">
                 <Play className="size-3.5 fill-current" aria-hidden />
               </span>
               {t.ctaVideo}
             </Link>
+            )}
           </div>
         </div>
 

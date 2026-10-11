@@ -7,13 +7,14 @@ import { LinkButton } from "@/components/ui/Button";
 import { Eyebrow, SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { AskKoud } from "@/components/chat/AskKoud";
+import { FEATURES } from "@/lib/features";
 import { getPrinciples, getProject, getProjects, getServices } from "@/lib/content";
 import { href } from "@/lib/i18n/routing";
 import { resolveLocale, type LangParams } from "@/lib/i18n/server";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 
-const SELECTION = ["wmbia", "akili", "hslu-exam-assistant"];
+const SELECTION = ["esge-services", "akili", "nzoto"];
 
 export default async function HomePage({ params }: LangParams) {
   const { locale, t: dict } = await resolveLocale(params);
@@ -176,12 +177,13 @@ export default async function HomePage({ params }: LangParams) {
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-muted">
             {t.ctaLead}
+            {FEATURES.koudAI && t.ctaLeadAI}
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <LinkButton href={href(locale, "/contact")} size="lg" icon={<ArrowRight className="size-4" />}>
               {dict.nav.contactCta}
             </LinkButton>
-            <AskKoud />
+            {FEATURES.koudAI && <AskKoud />}
           </div>
         </Reveal>
       </section>

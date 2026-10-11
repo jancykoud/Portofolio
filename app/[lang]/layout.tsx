@@ -5,6 +5,8 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { KoudAILauncher } from "@/components/chat/KoudAILauncher";
 import { HydrationMark } from "@/components/layout/HydrationMark";
+import { FEATURES } from "@/lib/features";
+import { personJsonLd } from "@/lib/seo";
 import { SITE } from "@/content/site";
 import { themeBootstrapScript } from "@/lib/theme";
 import { LOCALES } from "@/lib/i18n/routing";
@@ -56,6 +58,7 @@ export default async function RootLayout({ children, params }: LangParams & { ch
     <html lang={locale} data-scroll-behavior="smooth" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd(locale)) }} />
       </head>
       <body>
         <a
@@ -69,7 +72,7 @@ export default async function RootLayout({ children, params }: LangParams & { ch
           {children}
         </main>
         <SiteFooter locale={locale} />
-        <KoudAILauncher />
+        {FEATURES.koudAI && <KoudAILauncher />}
         <HydrationMark />
       </body>
     </html>

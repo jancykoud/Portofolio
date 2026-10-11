@@ -67,6 +67,7 @@ test.describe("internationalisation", () => {
   });
 
   test("KOUD AI speaks the page language", async ({ page }) => {
+    test.skip(process.env.KOUD_AI_UI !== "1", "needs a build with KOUD_AI_UI_PREVIEW=1");
     await page.goto("/en");
     await page.getByRole("button", { name: /Open KOUD AI/ }).click();
     await expect(page.getByRole("dialog", { name: "KOUD AI" }).getByText("Hi, I'm KOUD AI")).toBeVisible();

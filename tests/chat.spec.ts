@@ -22,7 +22,22 @@ test.describe("KOUD AI — API (no key configured in tests)", () => {
   });
 });
 
+// Without a key, the production build hides every entry point to the assistant.
+test.describe("KOUD AI — hidden while not configured", () => {
+  test.skip(process.env.KOUD_AI_UI === "1", "UI preview build");
+  test("no launcher, no ask buttons, no mention in the home CTA @mobile", async ({ page }) => {
+    for (const path of ["/", "/projets/wmbia", "/services", "/a-propos", "/blog/ogc-sensorthings-guide", "/en"]) {
+      await page.goto(path);
+      await expect(page.getByRole("button", { name: /KOUD AI/ })).toHaveCount(0);
+    }
+    await page.goto("/");
+    await expect(page.getByText("Vous pouvez aussi interroger KOUD AI")).toHaveCount(0);
+  });
+});
+
+// Widget UI tests: run on a build made with KOUD_AI_UI_PREVIEW=1 and KOUD_AI_UI=1.
 test.describe("KOUD AI — widget", () => {
+  test.skip(process.env.KOUD_AI_UI !== "1", "needs a build with KOUD_AI_UI_PREVIEW=1");
   test("unconfigured state is explicit and input is disabled @mobile", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: /Ouvrir KOUD AI/ }).click();
