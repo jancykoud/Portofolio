@@ -67,7 +67,7 @@ export function Showroom({ projects, filters }: { projects: Project[]; filters: 
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className={cn(large && "md:col-span-2")}
               >
-                <ProjectCard project={p} index={i} large={large} />
+                <ProjectCard project={p} index={i} large={large} headingLevel={2} />
               </motion.li>
             );
           })}

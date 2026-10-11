@@ -69,7 +69,7 @@ export default function AboutPage() {
                       : "inline-flex min-h-12 items-center gap-2 rounded-full border border-line-strong px-6 text-[0.95rem] font-medium hover:border-fg"
                   }
                 >
-                  <Download className="size-4" aria-hidden /> {r.label} <span className="font-mono text-xs opacity-70">PDF</span>
+                  <Download className="size-4" aria-hidden /> {r.label} <span className="font-mono text-xs">PDF</span>
                 </a>
               ))}
             </div>

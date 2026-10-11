@@ -77,7 +77,7 @@ export default function BlogPage() {
       </ol>
 
       <p className="mt-10 text-sm text-muted">
-        Envie d'expérimentations interactives ? Voir le <Link href="/lab" className="text-accent-fg underline-offset-4 hover:underline">Lab</Link>.
+        Envie d'expérimentations interactives ? Voir le <Link href="/lab" className="text-accent-fg underline underline-offset-4">Lab</Link>.
       </p>
     </div>
   );

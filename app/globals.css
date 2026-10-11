@@ -306,9 +306,13 @@
   animation: rise-in 900ms var(--ease-out-expo) both;
   animation-delay: calc(var(--i, 0) * 90ms + 80ms);
 }
-.hero-line {
-  animation: line-in 1000ms var(--ease-out-expo) both;
-  animation-delay: calc(var(--i, 0) * 90ms);
+/* The title is the LCP element: on phones it paints immediately; the line
+   reveal is reserved for larger screens where it costs nothing measurable. */
+@media (width >= 64rem) {
+  .hero-line {
+    animation: line-in 1000ms var(--ease-out-expo) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
 }
 
 @keyframes dash-flow {

@@ -12,7 +12,7 @@ Légende : ✅ sourcé (repo, CV ou site en ligne) · ⚠️ à confirmer par Ja
 | GitHub | github.com/jancykoud | CV, site (200 OK) | ✅ |
 | GitLab | gitlab.com/fridelinbanga | site (200 OK) | ✅ |
 | LinkedIn | linkedin.com/in/jancy-koud-banga | CV | ⚠️ le footer actuel pointe vers `jancykoudbanga` |
-| Portrait | `public/images/profile.jpg` (1250², fond blanc détouré) | repo | ✅ La référence montre un portrait studio sur fond sombre : **à fournir** pour un rendu optimal (le portrait actuel est traité en duotone tokenisé, sans retouche du visage) |
+| Portrait | `public/images/profile.jpg` (1250², fond blanc) → `portrait-cutout.png` | repo | ✅ Seul le fond blanc a été retiré (remplissage depuis les bords), sans aucune retouche du visage. La référence montre un portrait studio en plan large sur fond sombre : **à fournir** pour un rendu optimal. L'original n'est pas modifié. |
 | YouTube / WhatsApp (maquette) | — | — | ❌ non publiés (aucune URL fournie) |
 | Téléphone | +33 7 88 70 29 85 | CV | Non affiché dans la refonte (anti-spam, conforme à la maquette « Contact ») |
 
@@ -68,7 +68,11 @@ Rédigés à partir des projets réels. **Aucun tarif, délai ni résultat promi
 
 3 articles conservés tels quels (contenu de Jancy) : OGC SensorThings (15/04/2026), LoRaWAN terrain (01/05/2026), Qdrant/Wmbia (20/05/2026). Les articles de la maquette (SensorThings API, Claude Code, CI/CD GitLab-K8s) **n'existent pas** et ne sont pas inventés.
 
-## 7. Retiré (avec justification)
+## 7. Interface
+
+Le sélecteur de langue « FR » de la maquette n'est **pas** affiché : le site est entièrement en français et aucun contenu anglais validé n'existe. Un bouton de langue inactif aurait enfreint la règle « aucun bouton inactif ». Prévoir une passe de traduction (contenus `content/*.ts` + MDX) avant d'ajouter `next-intl`.
+
+## 8. Retiré (avec justification)
 
 | Contenu | Raison |
 |---|---|

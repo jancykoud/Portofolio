@@ -27,7 +27,9 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
   useEffect(() => setIndex(0), [device]);
 
   useEffect(() => {
-    stripRef.current?.querySelector<HTMLElement>(`[data-i="${index}"]`)?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    const strip = stripRef.current;
+    const thumb = strip?.querySelector<HTMLElement>(`[data-i="${index}"]`);
+    if (strip && thumb) strip.scrollTo({ left: thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2, behavior: "smooth" });
   }, [index]);
 
   const onKey = (e: React.KeyboardEvent) => {
@@ -99,7 +101,7 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
       <p className="mt-3 text-sm text-muted">{current.caption}</p>
 
       {list.length > 1 && (
-        <div ref={stripRef} className="mt-5 flex gap-3 overflow-x-auto pb-2" aria-label="Miniatures">
+        <div ref={stripRef} className="relative mt-5 flex gap-3 overflow-x-auto pb-2" aria-label="Miniatures">
           {list.map((s, i) => (
             <button
               key={s.src}

@@ -37,6 +37,7 @@ Aucun composant ne référence une couleur brute. Tout passe par ces variables, 
 | `--accent-fg` | Accent utilisé **comme couleur de texte** (variante plus claire ou plus foncée pour rester lisible) |
 | `--atmo-1`, `--atmo-2` | Couleurs d'ambiance : halos, scène 3D, orbe IA |
 | `--focus` | Anneau de focus |
+| `--glass` | Fond des surfaces vitrées (header, panneaux) |
 | `--danger`, `--success` | États de formulaire |
 
 ### Thèmes
@@ -48,7 +49,7 @@ Aucun composant ne référence une couleur brute. Tout passe par ces variables, 
 | **Aurora** | #0A0B1E | #14143A | #7C3AED | #FFFFFF | #8B5CF6 | bleu nuit + violet |
 | **Daylight** | #F6F7FA | #FFFFFF | #1D4ED8 | #FFFFFF | #2563EB | clair éditorial |
 | **Ivory** | #F3F0E8 | #FBF9F3 | #141414 | #F3F0E8 | #A16207 | blanc cassé + noir |
-| **System** | — | — | — | — | — | résout vers Obsidian ou Daylight selon `prefers-color-scheme` |
+| **System** (défaut) | — | — | — | — | — | résout vers Obsidian ou Daylight selon `prefers-color-scheme` ; c'est le choix par défaut, pour respecter l'appareil. Pour imposer Obsidian, modifier `DEFAULT_PREFS` dans `lib/theme.ts`. |
 
 Les ratios de contraste sont **calculés et testés** par `tests/contrast.spec.ts` et affichés en direct dans le Lab (« Contrast Inspector »).
 
@@ -56,7 +57,7 @@ Les ratios de contraste sont **calculés et testés** par `tests/contrast.spec.t
 
 - `data-contrast="high"` : `--text-muted` rapproché de `--text`, bordures renforcées. Il remplace un « curseur de luminosité », qui aurait dégradé les contrastes.
 - `data-motion="reduced"` : force le mouvement réduit même si l'OS ne le demande pas. Le réglage de l'OS est **toujours** respecté.
-- `data-perf="lite"` : désactive WebGL, flous `backdrop-filter`, parallaxe. Il est activé automatiquement si `navigator.connection.saveData` ou si `hardwareConcurrency ≤ 4`.
+- `data-perf="lite"` : désactive WebGL, flous `backdrop-filter`, parallaxe. Il est activé automatiquement si `navigator.connection.saveData` ou si `hardwareConcurrency ≤ 2`. La 3D n'est de toute façon chargée que sur écran ≥ 1024 px.
 
 ## 3. Typographie
 

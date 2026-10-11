@@ -8,14 +8,14 @@ import { SITE } from "@/content/site";
 import { themeBootstrapScript } from "@/lib/theme";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "./fonts/GeistVF.woff2",
   variable: "--font-geist-sans",
   weight: "100 900",
   display: "swap",
 });
 
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "./fonts/GeistMonoVF.woff2",
   variable: "--font-geist-mono",
   weight: "100 900",
   display: "swap",

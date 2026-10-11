@@ -20,8 +20,13 @@ export function CaseStudyNav({ sections }: { sections: { id: string; label: stri
     return () => io.disconnect();
   }, [sections]);
 
+  // Keep the active tab visible by scrolling the nav itself — scrollIntoView
+  // would also scroll the window and cancel the page's anchor scroll.
   useEffect(() => {
-    navRef.current?.querySelector<HTMLElement>(`[data-id="${active}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
+    const nav = navRef.current;
+    const link = nav?.querySelector<HTMLElement>(`[data-id="${active}"]`);
+    if (!nav || !link) return;
+    nav.scrollTo({ left: link.offsetLeft - nav.clientWidth / 2 + link.clientWidth / 2 });
   }, [active]);
 
   return (
