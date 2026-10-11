@@ -281,6 +281,49 @@ export const PROJECTS: Project[] = [
     missing: ["Rôle exact et technologies au-delà de Next.js", "Statut commercial"],
   },
   {
+    slug: "esge-services",
+    name: "ESGE Services",
+    tagline: "Plateforme de services à domicile : de la demande de devis à la facture, chaque étape suivie en ligne.",
+    summary:
+      "Mission client pour ESGE GLOBAL COMMERCE : une plateforme qui organise sept familles de services à domicile (ménage, jardinage, bricolage, repas, courses, linge, vigilance du domicile). Le particulier décrit son besoin, reçoit un devis, l'accepte, suit la prestation en direct et retrouve ses documents ; l'équipe et les intervenants ont chacun leur espace.",
+    categories: ["professional", "web"],
+    status: "in-progress",
+    statusNote: "Fonctionnalités livrées ; mise en service en attente des informations du client.",
+    year: "2026",
+    role: "Conception et développement fullstack — mission client",
+    stack: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Zod", "PDFKit", "Vitest", "Playwright"],
+    problem:
+      "Un prestataire de services à domicile doit gérer des demandes, des devis, des plannings d'intervenants, des comptes rendus et des factures, souvent par téléphone et sur papier. Le client, lui, ne sait ni où en est sa demande, ni quand l'intervenant arrive.",
+    solution: [
+      "Parcours de demande en 4 étapes (service, créneau souhaité avec calendrier accessible, coordonnées, récapitulatif), avec contrôle des zones desservies.",
+      "Devis versionnés, rendus immuables une fois envoyés (triggers en base), puis acceptation en ligne et suivi de la demande étape par étape.",
+      "Suivi de la prestation en direct (prévu, en route, chez vous, terminé) à partir des horaires saisis par l'intervenant — aucune position géographique n'est partagée.",
+      "« Journal de la maison » (compte rendu et photos après chaque passage) et « Carnet de la maison » (consignes du client relues à chaque intervention).",
+      "Trois espaces distincts : client, intervenants (planning, missions, comptes rendus, documents) et équipe ESGE (back-office) ; aucun rôle ne s'obtient par l'inscription.",
+    ],
+    challenges: [
+      { title: "La sécurité dans la base", body: "Règles d'accès Row Level Security sur les données, testées contre une vraie base PostgreSQL : un client ne voit que ses demandes, les factures émises sont immuables, les pièces jointes passent par des URL signées de courte durée." },
+      { title: "Une règle de vérité", body: "Aucun tarif, avis, zone ou promesse n'est affiché sans décision validée par le client : l'application fonctionne avec des replis honnêtes (« sur devis ») tant qu'une information manque." },
+      { title: "Suivre sans surveiller", body: "Le client sait où en est le passage sans que l'intervenant soit géolocalisé : seules les heures déclarées sont partagées." },
+    ],
+    facts: [
+      { value: "7", label: "familles de services à domicile", source: "README / SPEC du projet" },
+      { value: "3", label: "espaces : client, intervenants, équipe", source: "README du projet" },
+      { value: "≈ 230", label: "tests Playwright (parcours, accessibilité, 4 largeurs)", source: "README du projet" },
+    ],
+    screens: [
+      { src: "/projects/esge-services/desktop-01.webp", alt: "Page du service Ménage à domicile", caption: "Page service — sept services sur un seul gabarit, contenus distincts.", device: "desktop", width: 1440, height: 900 },
+      { src: "/projects/esge-services/desktop-02.webp", alt: "Espace client : suivi en direct « Camille est chez vous » et avancement de la demande", caption: "Espace client : suivi en direct de la prestation et avancement de la demande (données de démonstration).", device: "desktop", width: 1440, height: 900 },
+      { src: "/projects/esge-services/desktop-03.webp", alt: "Journal de la maison : compte rendu d'intervention avec tâches faites et photos", caption: "Journal de la maison : compte rendu et photos après chaque passage.", device: "desktop", width: 1440, height: 900 },
+      { src: "/projects/esge-services/desktop-04.webp", alt: "Carnet de la maison : consignes du client pour les intervenants", caption: "Carnet de la maison : les consignes du client, relues à chaque intervention.", device: "desktop", width: 1440, height: 900 },
+      { src: "/projects/esge-services/mobile-01.webp", alt: "Journal de la maison sur mobile", caption: "Journal de la maison sur mobile.", device: "mobile", width: 390, height: 843 },
+      { src: "/projects/esge-services/mobile-02.webp", alt: "Carte de suivi « Camille est en route »", caption: "Suivi en direct : l'intervenant est en route.", device: "mobile", width: 358, height: 294 },
+    ],
+    links: [],
+    cover: { hue: "#14532d", motif: "stack" },
+    missing: ["URL publique après mise en service", "Accord du client pour l'affichage de la marque ESGE"],
+  },
+  {
     slug: "tash-cash-agency",
     name: "Tash-Cash Agency",
     tagline: "Site trilingue pour une agence panafricaine basée à Yaoundé.",
@@ -372,7 +415,7 @@ export const PROJECTS: Project[] = [
 
   { slug: "carhilo", name: "Carhilo", tagline: "", summary: "", categories: ["web"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#0ea5e9", motif: "grid" }, draft: true, missing: ["Tout le contenu"] },
 
-  { slug: "esge-services", name: "ESGE Services", tagline: "", summary: "", categories: ["professional"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#14b8a6", motif: "stack" }, draft: true, missing: ["Tout le contenu"] },
+
 ];
 
 export const CATEGORY_LABELS: Record<ProjectCategory, string> = {

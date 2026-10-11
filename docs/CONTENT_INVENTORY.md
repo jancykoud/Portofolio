@@ -99,3 +99,11 @@ Captures réelles prises sur les sites publics, sans compte et sans retouche, au
 
 Comptes de démo Akili (`directeur@horizon.ci`, `prof.math@horizon.ci`) : **refusés** (mots de passe changés depuis l'ancien site, ce qui est souhaitable). Tableaux de bord non capturés ; aucune autre tentative faite.
 Tash-Cash Agency : non publié (pas d'accord).
+
+## 11. ESGE Services (11/10/2026)
+
+Source : dépôt local `~/Documents/esgegroupprestation` (dépôt GitHub privé `jancykoud/esgeservices`) : README, `docs/SPEC.md`, `ARCHITECTURE.md`, `AVANCEMENT.md`, `ASSETS.md`. Captures reprises de `docs/captures/` (base locale de démonstration, comptes `is_demo`).
+
+Exclusions volontaires : tous les écrans affichant des prix (formules, « dès 16 €/h », cartes services « dès 32 €/h », calculateur) — conditions commerciales du client avant lancement ; anciennes captures de l'accueil dont la photo précède le remplacement des images aux droits non documentés (`ASSETS.md`). Aucune donnée du PDF confidentiel des associés.
+
+À confirmer : accord d'ESGE pour l'affichage de sa marque dans le portfolio ; URL publique après mise en service.

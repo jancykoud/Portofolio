@@ -170,6 +170,36 @@ export const PROJECTS_EN: Record<string, ProjectTranslation> = {
       { alt: "VY product page on mobile", caption: "Product page on mobile." },
     ],
   },
+  "esge-services": {
+    tagline: "A home-services platform: from quote request to invoice, every step tracked online.",
+    summary:
+      "Client engagement for ESGE GLOBAL COMMERCE: a platform organising seven families of home services (cleaning, gardening, small repairs, meals, grocery delivery, laundry, home watch). Customers describe their need, receive a quote, accept it, follow the service live and find their documents; the team and the service staff each have their own space.",
+    statusNote: "Features delivered; go-live awaiting information from the client.",
+    role: "Full-stack design and development — client engagement",
+    problem:
+      "A home-services provider has to handle requests, quotes, staff schedules, visit reports and invoices, often by phone and on paper. Customers, meanwhile, don't know where their request stands or when someone will arrive.",
+    solution: [
+      "A 4-step request flow (service, preferred slot with an accessible calendar, contact details, summary), with service-area checks.",
+      "Versioned quotes made immutable once sent (database triggers), then online acceptance and step-by-step request tracking.",
+      "Live visit tracking (scheduled, on the way, at your home, done) based on times entered by the staff member — no location is ever shared.",
+      "A “house journal” (report and photos after each visit) and a “house notebook” (customer instructions reviewed at every visit).",
+      "Three separate spaces: customer, service staff (schedule, assignments, reports, documents) and ESGE team (back office); no role can be obtained by signing up.",
+    ],
+    challenges: [
+      { title: "Security in the database", body: "Row Level Security rules on the data, tested against a real PostgreSQL database: customers only see their own requests, issued invoices are immutable, attachments go through short-lived signed URLs." },
+      { title: "A rule of truth", body: "No price, review, service area or promise is shown without a decision validated by the client: the app runs with honest fallbacks (“on quote”) while information is missing." },
+      { title: "Tracking without surveillance", body: "Customers know where the visit stands without the staff member being geolocated: only declared times are shared." },
+    ],
+    facts: ["families of home services", "spaces: customer, staff, team", "Playwright tests (journeys, accessibility, 4 widths)"],
+    screens: [
+      { alt: "Home cleaning service page", caption: "Service page — seven services on a single template, distinct content." },
+      { alt: "Customer space: live tracking and request progress", caption: "Customer space: live visit tracking and request progress (demo data)." },
+      { alt: "House journal: visit report with completed tasks and photos", caption: "House journal: report and photos after each visit." },
+      { alt: "House notebook: customer instructions for service staff", caption: "House notebook: the customer's instructions, reviewed at every visit." },
+      { alt: "House journal on mobile", caption: "House journal on mobile." },
+      { alt: "Tracking card “Camille is on the way”", caption: "Live tracking: the staff member is on the way." },
+    ],
+  },
   "orient-ex": {
     tagline: "Volunteer mentoring for students and young professionals.",
     summary: "A platform that connects young people with volunteer mentors to support their studies, careers and personal development.",

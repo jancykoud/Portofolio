@@ -34,7 +34,7 @@ test.describe("navigation & pages", () => {
   });
 
   test("draft projects are not published", async ({ request }) => {
-    for (const slug of ["carhilo", "esge-services"]) {
+    for (const slug of ["carhilo"]) {
       expect((await request.get(`/projets/${slug}`)).status()).toBe(404);
     }
     const sitemap = await (await request.get("/sitemap.xml")).text();
