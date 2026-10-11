@@ -88,3 +88,14 @@ Captures réelles prises sur les sites publics, sans compte et sans retouche, au
 - **Wmbia** (wmbia.com) : accueil/connexion desktop + mobile. L'assistant connecté reste à capturer.
 - **Orient'Ex** (orient-ex.org) : accueil, « Pourquoi Orient'Ex », « Comment ça marche », programmes + mobile. Volontairement exclus : la page des mentors (noms et profils de personnes réelles) et le bandeau des logos partenaires.
 - **Akili** (démo) : connexion, inscription, création d'établissement, desktop + mobile. Les tableaux de bord (compte de démo) restent à capturer avec l'accord de Jancy.
+
+## 10. Nouveaux projets publiés (11/10/2026, avec l'accord de Jancy)
+
+| Projet | Source | Captures | À confirmer |
+|---|---|---|---|
+| **Nzoto** (ex-brouillon) | esante-web.vercel.app (textes du site, projet Vercel Next.js en monorepo) | Accueil et 3 sections + mobile. **Annuaire des praticiens exclu** (noms de personnes réelles) ; page pharmacies exclue (vide) | Rôle exact, stack au-delà de Next.js, statut de lancement |
+| **VY** (ex-brouillon) | vy-fawn.vercel.app (textes du site, projet Vercel Next.js) | Accueil, boutique, fiche produit, tenue + mobile ; bannière cookies refusée avant capture | Rôle exact, stack, statut commercial |
+| **Akili Université** (nouveau) | akili-universite.vercel.app | Création d'établissement desktop + mobile. **Pages de connexion exclues** : elles affichent « 847 élèves · 5 établissements · 98 % satisfaction » et un témoignage, non vérifiables | Rôle, stack, statut ; origine des chiffres de la page de connexion |
+
+Comptes de démo Akili (`directeur@horizon.ci`, `prof.math@horizon.ci`) : **refusés** (mots de passe changés depuis l'ancien site, ce qui est souhaitable). Tableaux de bord non capturés ; aucune autre tentative faite.
+Tash-Cash Agency : non publié (pas d'accord).

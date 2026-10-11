@@ -54,7 +54,7 @@ export function Showroom({ projects, filters }: { projects: Project[]; filters: 
             )}
           >
             {f.label}
-            <span className={cn("font-mono text-[0.7rem]", active === f.id ? "opacity-70" : "opacity-60")}>{f.count}</span>
+            <span className="font-mono text-[0.7rem]">{f.count}</span>
           </button>
         ))}
       </div>

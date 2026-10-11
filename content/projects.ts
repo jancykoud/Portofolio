@@ -194,6 +194,93 @@ export const PROJECTS: Project[] = [
     missing: ["Rôle exact et année", "Problème / résultats"],
   },
   {
+    slug: "akili-universite",
+    name: "Akili Université",
+    tagline: "La déclinaison d'Akili pour l'enseignement supérieur.",
+    summary:
+      "Version d'Akili dédiée aux universités et établissements d'enseignement supérieur (licence, master, doctorat) : création d'établissement guidée, choix du pays et de la devise, espaces par profil.",
+    categories: ["web", "education"],
+    status: "demo",
+    statusNote: "Site en ligne — statut à confirmer.",
+    year: "2026",
+    role: "Conception et développement",
+    stack: [],
+    solution: [
+      "Assistant de création d'établissement en 3 étapes, avec le type « Université » (licence, master, doctorat).",
+      "Paramétrage régional : pays d'Afrique francophone et devises XOF, XAF, EUR, USD, GNF, MAD.",
+      "Inscription par profil (élève, parent, enseignant) en 4 étapes, interface bilingue FR/EN.",
+    ],
+    screens: [
+      { src: "/projects/akili-universite/desktop-01.webp", alt: "Création d'un établissement de type Université, étape 1 sur 3", caption: "Création d'un établissement d'enseignement supérieur : étape 1 sur 3.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/akili-universite/mobile-01.webp", alt: "Création d'établissement Akili Université sur mobile", caption: "Le même parcours sur mobile.", device: "mobile", width: 900, height: 1947 },
+    ],
+    links: [{ label: "Site en ligne", href: "https://akili-universite.vercel.app", kind: "live" }],
+    cover: { hue: "#f59e0b", motif: "grid" },
+    missing: ["Rôle exact et stack", "Les chiffres affichés sur la page de connexion (847 élèves, 98 % de satisfaction) ne sont pas repris : à vérifier"],
+  },
+  {
+    slug: "nzoto",
+    name: "Nzoto",
+    tagline: "Trouver un médecin vérifié au Congo-Brazzaville, et garder son dossier de santé avec soi.",
+    summary:
+      "Plateforme de santé : annuaire de praticiens dont les justificatifs sont contrôlés, dossier médical personnel et carte d'urgence QR. Réservation de consultation avec règlement par mobile money ou au cabinet, depuis n'importe quel navigateur.",
+    categories: ["web"],
+    status: "demo",
+    statusNote: "Site en ligne — statut de lancement à confirmer.",
+    year: "2026",
+    role: "Conception et développement",
+    stack: ["Next.js"],
+    problem:
+      "Savoir si un praticien est habilité, refaire son histoire médicale à chaque consultation, être pris en charge aux urgences sans que personne ne connaisse son groupe sanguin ni ses allergies : trois obstacles du quotidien.",
+    solution: [
+      "Un annuaire vérifié : numéro d'Ordre, justificatifs et établissement de rattachement contrôlés avant tout affichage ; tarif affiché.",
+      "Un dossier de santé (groupe sanguin, statut drépanocytaire, allergies, traitements, documents) visible du seul patient, partageable praticien par praticien et révocable.",
+      "Une carte d'urgence QR à deux niveaux : le public ne voit que le vital ; l'accès complet exige un compte soignant et laisse une trace. Imprimable et lisible en noir et blanc.",
+      "Un parcours en trois étapes sans application à installer : trouver, réserver (mobile money ou au cabinet), garder son dossier.",
+    ],
+    screens: [
+      { src: "/projects/nzoto/desktop-01.webp", alt: "Accueil de Nzoto : « Toute votre santé, au même endroit — partout au Congo »", caption: "Accueil — les compteurs (villes, praticiens, spécialités) sont lus en base, pas saisis à la main.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/nzoto/desktop-02.webp", alt: "Section présentant les trois obstacles et ce que Nzoto y change", caption: "Les trois problèmes traités et la réponse du produit.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/nzoto/desktop-03.webp", alt: "Section « Trois étapes, et rien à installer »", caption: "Parcours en trois étapes : trouver, réserver, garder.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/nzoto/desktop-04.webp", alt: "Section « Ce qui protège votre dossier »", caption: "Protection du dossier : vérification à la source, documents chiffrés, accès tracé.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/nzoto/mobile-01.webp", alt: "Accueil de Nzoto sur mobile", caption: "Accueil sur mobile.", device: "mobile", width: 900, height: 1947 },
+    ],
+    links: [{ label: "Site en ligne", href: "https://esante-web.vercel.app", kind: "live" }],
+    cover: { hue: "#0f766e", motif: "wave" },
+    missing: ["Rôle exact et technologies au-delà de Next.js", "Statut de lancement"],
+  },
+  {
+    slug: "vy",
+    name: "VY",
+    tagline: "Boutique en ligne d'une marque de vêtements imprimés à la commande.",
+    summary:
+      "Site e-commerce de la marque VY : t-shirts, pulls, casquettes et bonnets en coton lourd, imprimés à la commande et expédiés en France. Collections, tenues par moment de la journée, fiches produit détaillées, panier et favoris.",
+    categories: ["ecommerce", "web"],
+    status: "demo",
+    statusNote: "Site en ligne — statut commercial à confirmer.",
+    year: "2026",
+    role: "Conception et développement",
+    stack: ["Next.js"],
+    solution: [
+      "Catalogue par univers (hommes, femmes, enfants) avec filtres par couleur, taille et catégorie.",
+      "Tenues éditorialisées « Une journée VY » (entraînement, travail, trajet, sortie) qui renvoient vers les pièces.",
+      "Fiches produit avec coloris, guide des tailles, mesures réelles et composition affichées.",
+      "Pages de confiance : livraison et retours, FAQ, guide des tailles ; consentement aux cookies avec refus en un clic.",
+    ],
+    screens: [
+      { src: "/projects/vy/desktop-01.webp", alt: "Accueil de VY : Collection 01, t-shirt VY", caption: "Accueil — Collection 01.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/vy/desktop-02.webp", alt: "Section « Une journée VY »", caption: "Tenues éditorialisées « Une journée VY ».", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/vy/desktop-03.webp", alt: "Boutique VY avec filtres par couleur et taille", caption: "Boutique : filtres par catégorie, couleur et taille.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/vy/desktop-04.webp", alt: "Fiche produit du hoodie VY", caption: "Fiche produit : coloris, tailles, description.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/vy/desktop-05.webp", alt: "Tenue « L'entraînement » et pièces associées", caption: "Une tenue et ses pièces.", device: "desktop", width: 2400, height: 1500 },
+      { src: "/projects/vy/mobile-01.webp", alt: "Accueil de VY sur mobile", caption: "Accueil sur mobile.", device: "mobile", width: 900, height: 1947 },
+      { src: "/projects/vy/mobile-02.webp", alt: "Fiche produit VY sur mobile", caption: "Fiche produit sur mobile.", device: "mobile", width: 900, height: 1947 },
+    ],
+    links: [{ label: "Site en ligne", href: "https://vy-fawn.vercel.app", kind: "live" }],
+    cover: { hue: "#ec4899", motif: "orbit" },
+    missing: ["Rôle exact et technologies au-delà de Next.js", "Statut commercial"],
+  },
+  {
     slug: "tash-cash-agency",
     name: "Tash-Cash Agency",
     tagline: "Site trilingue pour une agence panafricaine basée à Yaoundé.",
@@ -282,9 +369,9 @@ export const PROJECTS: Project[] = [
   },
 
   /* ── Drafts: named in the brief, no verifiable content yet ── */
-  { slug: "nzoto", name: "Nzoto", tagline: "", summary: "", categories: ["web"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#ef4444", motif: "wave" }, draft: true, missing: ["Tout le contenu"] },
+
   { slug: "carhilo", name: "Carhilo", tagline: "", summary: "", categories: ["web"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#0ea5e9", motif: "grid" }, draft: true, missing: ["Tout le contenu"] },
-  { slug: "vy", name: "VY", tagline: "", summary: "", categories: ["ecommerce"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#ec4899", motif: "orbit" }, draft: true, missing: ["Tout le contenu"] },
+
   { slug: "esge-services", name: "ESGE Services", tagline: "", summary: "", categories: ["professional"], status: "in-progress", year: "", role: "", stack: [], screens: [], links: [], cover: { hue: "#14b8a6", motif: "stack" }, draft: true, missing: ["Tout le contenu"] },
 ];
 

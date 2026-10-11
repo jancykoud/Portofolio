@@ -132,7 +132,7 @@ export default async function ProjectPage({ params }: Props) {
             : [
                 { v: project.year || "—", l: t.period },
                 { v: dict.projects.status[project.status], l: t.status },
-                { v: String(project.stack.length), l: t.technologies },
+                ...(project.stack.length ? [{ v: String(project.stack.length), l: project.stack.length > 1 ? t.technologies : t.technology }] : []),
               ]
           ).map((f) => (
             <div key={f.l}>

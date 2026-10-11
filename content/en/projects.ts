@@ -110,6 +110,66 @@ export const PROJECTS_EN: Record<string, ProjectTranslation> = {
       { alt: "Akili school creation on mobile", caption: "School creation on mobile." },
     ],
   },
+  "akili-universite": {
+    tagline: "Akili's edition for higher education.",
+    summary:
+      "A version of Akili for universities and higher-education institutions (bachelor's, master's, doctorate): guided institution setup, choice of country and currency, role-based spaces.",
+    statusNote: "Live site — status to be confirmed.",
+    role: "Design and development",
+    solution: [
+      "3-step institution setup wizard, with the “University” type (bachelor's, master's, doctorate).",
+      "Regional settings: French-speaking African countries and XOF, XAF, EUR, USD, GNF, MAD currencies.",
+      "4-step, role-based sign-up (student, parent, teacher), bilingual FR/EN interface.",
+    ],
+    screens: [
+      { alt: "Creating a University-type institution, step 1 of 3", caption: "Setting up a higher-education institution: step 1 of 3." },
+      { alt: "Akili Université institution setup on mobile", caption: "The same flow on mobile." },
+    ],
+  },
+  nzoto: {
+    tagline: "Find a verified doctor in Congo-Brazzaville, and keep your health record with you.",
+    summary:
+      "A health platform: a directory of practitioners whose credentials are checked, a personal medical record and a QR emergency card. Book a consultation and pay by mobile money or at the practice, from any browser.",
+    statusNote: "Live site — launch status to be confirmed.",
+    role: "Design and development",
+    problem:
+      "Knowing whether a practitioner is licensed, retelling your medical history at every visit, being treated in an emergency with nobody knowing your blood type or allergies: three everyday obstacles.",
+    solution: [
+      "A verified directory: medical council number, credentials and affiliated facility checked before anything is shown; fees displayed.",
+      "A health record (blood type, sickle-cell status, allergies, treatments, documents) visible to the patient only, shareable practitioner by practitioner and revocable.",
+      "A two-level QR emergency card: the public sees only vital information; full access requires a caregiver account and is logged. Printable and readable in black and white.",
+      "A three-step journey with nothing to install: find, book (mobile money or at the practice), keep your record.",
+    ],
+    screens: [
+      { alt: "Nzoto home page: “All your health in one place — anywhere in Congo”", caption: "Home — the counters (cities, practitioners, specialties) are read from the database, not typed in by hand." },
+      { alt: "Section presenting the three obstacles and what Nzoto changes", caption: "The three problems addressed and the product's answer." },
+      { alt: "“Three steps, nothing to install” section", caption: "Three-step journey: find, book, keep." },
+      { alt: "“What protects your record” section", caption: "Record protection: verification at the source, encrypted documents, logged access." },
+      { alt: "Nzoto home page on mobile", caption: "Home on mobile." },
+    ],
+  },
+  vy: {
+    tagline: "Online shop for a print-on-demand clothing brand.",
+    summary:
+      "E-commerce site for the VY brand: heavyweight cotton t-shirts, sweatshirts, caps and beanies, printed on demand and shipped in France. Collections, outfits by time of day, detailed product pages, cart and favourites.",
+    statusNote: "Live site — commercial status to be confirmed.",
+    role: "Design and development",
+    solution: [
+      "Catalogue by audience (men, women, kids) with filters by colour, size and category.",
+      "Editorial outfits “A day in VY” (training, work, commute, going out) linking to the pieces.",
+      "Product pages with colours, size guide, real measurements and fibre composition.",
+      "Trust pages: delivery and returns, FAQ, size guide; cookie consent with one-click refusal.",
+    ],
+    screens: [
+      { alt: "VY home page: Collection 01, VY t-shirt", caption: "Home — Collection 01." },
+      { alt: "“A day in VY” section", caption: "Editorial outfits “A day in VY”." },
+      { alt: "VY shop with colour and size filters", caption: "Shop: filters by category, colour and size." },
+      { alt: "VY hoodie product page", caption: "Product page: colours, sizes, description." },
+      { alt: "“Training” outfit and its pieces", caption: "An outfit and its pieces." },
+      { alt: "VY home page on mobile", caption: "Home on mobile." },
+      { alt: "VY product page on mobile", caption: "Product page on mobile." },
+    ],
+  },
   "orient-ex": {
     tagline: "Volunteer mentoring for students and young professionals.",
     summary: "A platform that connects young people with volunteer mentors to support their studies, careers and personal development.",

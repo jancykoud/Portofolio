@@ -34,12 +34,12 @@ test.describe("navigation & pages", () => {
   });
 
   test("draft projects are not published", async ({ request }) => {
-    for (const slug of ["nzoto", "carhilo", "vy", "esge-services"]) {
+    for (const slug of ["carhilo", "esge-services"]) {
       expect((await request.get(`/projets/${slug}`)).status()).toBe(404);
     }
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).toContain("/projets/declic");
-    expect(sitemap).not.toContain("/projets/nzoto");
+    expect(sitemap).not.toContain("/projets/carhilo");
   });
 
   test("desktop nav marks the current page", async ({ page }) => {
