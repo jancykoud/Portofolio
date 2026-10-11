@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test.describe("KOUD AI — API (no key configured in tests)", () => {
   test("GET reports configuration status honestly", async ({ request }) => {

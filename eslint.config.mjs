@@ -9,9 +9,6 @@ const config = [
     rules: {
       // French copy is full of apostrophes; escaping them all hurts readability for no safety gain.
       "react/no-unescaped-entities": "off",
-      // Flags intentional mount-time reads of browser-only state (URL, storage). To refactor
-      // towards useSyncExternalStore progressively; kept visible as warnings.
-      "react-hooks/set-state-in-effect": "warn",
     },
   },
 ];

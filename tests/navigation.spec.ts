@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { PAGES, trackErrors } from "./helpers";
 
 test.describe("navigation & pages", () => {
@@ -63,9 +63,10 @@ test.describe("navigation & pages", () => {
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 
-  test("skip link moves focus to main content", async ({ page }) => {
+  test("skip link moves focus to main content", async ({ page, browserName }) => {
     await page.goto("/");
-    await page.keyboard.press("Tab");
+    // Safari only tabs to links with Option+Tab (macOS default).
+    await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
     const skip = page.getByRole("link", { name: "Aller au contenu" });
     await expect(skip).toBeFocused();
     await skip.press("Enter");

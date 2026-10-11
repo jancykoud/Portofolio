@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { SUBJECTS, type SubjectId } from "@/content/contact";
+import { SUBJECTS } from "@/content/contact";
 import { SITE } from "@/content/site";
 import { cn } from "@/lib/utils";
 
@@ -14,13 +14,15 @@ const field =
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
-  const [subject, setSubject] = useState<SubjectId>("mission");
-  const startedAt = useRef(Date.now());
+  const startedAt = useRef(0);
   const formRef = useRef<HTMLFormElement>(null);
+  const subjectRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
+    startedAt.current = Date.now();
+    // Preselect from ?sujet=… on the uncontrolled <select> (no re-render needed).
     const s = new URLSearchParams(window.location.search).get("sujet");
-    if (s && SUBJECTS.some((x) => x.id === s)) setSubject(s as SubjectId);
+    if (s && subjectRef.current && SUBJECTS.some((x) => x.id === s)) subjectRef.current.value = s;
   }, []);
 
   const validate = (fd: FormData): Errors => {
@@ -114,7 +116,7 @@ export function ContactForm() {
           <label htmlFor="subject" className="text-sm font-medium">
             Sujet
           </label>
-          <select id="subject" name="subject" value={subject} onChange={(e) => setSubject(e.target.value as SubjectId)} className={cn(field, "mt-2 appearance-none bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10")} style={{ backgroundImage: "linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%)", backgroundPosition: "calc(100% - 20px) 50%, calc(100% - 15px) 50%", backgroundSize: "5px 5px, 5px 5px" }}>
+          <select id="subject" name="subject" ref={subjectRef} defaultValue="mission" className={cn(field, "mt-2 appearance-none bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10")} style={{ backgroundImage: "linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%)", backgroundPosition: "calc(100% - 20px) 50%, calc(100% - 15px) 50%", backgroundSize: "5px 5px, 5px 5px" }}>
             {SUBJECTS.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+import { parse as parseYaml } from "yaml";
 import readingTime from "reading-time";
 import GithubSlugger from "github-slugger";
 
@@ -17,6 +17,13 @@ export type PostMeta = {
 };
 
 export type Heading = { id: string; text: string; depth: 2 | 3 };
+
+/** Splits `---` YAML frontmatter from the MDX body. */
+function matter(raw: string) {
+  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw);
+  if (!m) return { data: {} as Record<string, unknown>, content: raw };
+  return { data: (parseYaml(m[1]!) ?? {}) as Record<string, unknown>, content: raw.slice(m[0].length) };
+}
 
 function parse(file: string) {
   const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");

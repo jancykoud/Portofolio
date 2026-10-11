@@ -8,36 +8,18 @@ import { SUGGESTED_QUESTIONS } from "@/content/chat";
 import { RichText } from "./RichText";
 import { useChat } from "./useChat";
 import { cn } from "@/lib/utils";
+import { Orb } from "./shared";
 
-export function Orb({ size = 56, className }: { size?: number; className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={cn("relative inline-flex shrink-0 items-center justify-center rounded-full", className)}
-      style={{
-        width: size,
-        height: size,
-        background:
-          "radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--atmo-2) 70%, white) 0%, var(--atmo-1) 45%, color-mix(in srgb, var(--atmo-1) 35%, black) 100%)",
-        boxShadow: "0 0 0 1px color-mix(in srgb, var(--atmo-1) 50%, transparent), 0 0 40px -6px var(--atmo-1)",
-        animation: "orb-breathe 5s ease-in-out infinite",
-      }}
-    >
-      <span className="flex gap-[18%]" style={{ width: "40%" }}>
-        <span className="aspect-[1/1.4] flex-1 rounded-full bg-white/90" />
-        <span className="aspect-[1/1.4] flex-1 rounded-full bg-white/90" />
-      </span>
-    </span>
-  );
-}
+type PanelProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  question: string | null;
+  onQuestionTaken: () => void;
+  returnFocusTo: React.RefObject<HTMLButtonElement | null>;
+};
 
-/** Other components can open the assistant with an optional question. */
-export function openKoudAI(question?: string) {
-  window.dispatchEvent(new CustomEvent("koud-ai:open", { detail: { question } }));
-}
-
-export function KoudAI() {
-  const [open, setOpen] = useState(false);
+/** Full assistant panel — loaded on demand by KoudAILauncher. */
+export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQuestionTaken, returnFocusTo }: PanelProps) {
   const [expanded, setExpanded] = useState(false);
   const [input, setInput] = useState("");
   const { messages, status, pending, error, send, stop, reset, checkStatus } = useChat();
@@ -46,14 +28,10 @@ export function KoudAI() {
   const queued = useRef<string | null>(null);
 
   useEffect(() => {
-    const onOpen = (e: Event) => {
-      const q = (e as CustomEvent<{ question?: string }>).detail?.question;
-      if (q) queued.current = q;
-      setOpen(true);
-    };
-    window.addEventListener("koud-ai:open", onOpen);
-    return () => window.removeEventListener("koud-ai:open", onOpen);
-  }, []);
+    if (!question) return;
+    queued.current = question;
+    onQuestionTaken();
+  }, [question, onQuestionTaken]);
 
   useEffect(() => {
     if (!open) return;
@@ -79,16 +57,6 @@ export function KoudAI() {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger
-        className={cn(
-          "glass fixed right-4 bottom-4 z-40 inline-flex h-14 items-center gap-3 rounded-full border border-line-strong p-1.5 sm:pr-5 shadow-[var(--shadow)] transition-transform hover:-translate-y-0.5 sm:right-6 sm:bottom-6",
-          open && "pointer-events-none opacity-0",
-        )}
-        aria-label="Ouvrir KOUD AI, l'assistant du portfolio"
-      >
-        <Orb size={44} />
-        <span className="hidden text-sm font-medium sm:inline">KOUD AI</span>
-      </Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className={cn("fixed inset-0 z-[60] bg-black/50", !expanded && "sm:bg-black/20")} />
@@ -96,6 +64,10 @@ export function KoudAI() {
           onOpenAutoFocus={(e) => {
             e.preventDefault();
             inputRef.current?.focus();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            returnFocusTo.current?.focus();
           }}
           className={cn(
             "fixed z-[70] flex flex-col overflow-hidden border-line-strong bg-bg shadow-[var(--shadow)]",

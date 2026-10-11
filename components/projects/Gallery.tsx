@@ -24,8 +24,6 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
     setIndex((i) => (i + dir + list.length) % list.length);
   }, [list.length]);
 
-  useEffect(() => setIndex(0), [device]);
-
   useEffect(() => {
     const strip = stripRef.current;
     const thumb = strip?.querySelector<HTMLElement>(`[data-i="${index}"]`);
@@ -48,7 +46,10 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
               <button
                 key={d}
                 aria-pressed={device === d}
-                onClick={() => setDevice(d)}
+                onClick={() => {
+                  setDevice(d);
+                  setIndex(0);
+                }}
                 className={cn("min-h-10 rounded-full px-4 text-sm transition-colors", device === d ? "bg-fg text-bg" : "text-muted hover:text-fg")}
               >
                 {DEVICE_LABEL[d]}

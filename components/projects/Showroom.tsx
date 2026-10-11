@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { Project, ProjectCategory } from "@/content/types";
 import { ProjectCard } from "./ProjectCard";
 import { useRootFlags } from "@/lib/hooks";
@@ -9,22 +9,29 @@ import { cn } from "@/lib/utils";
 
 type Filter = { id: ProjectCategory; label: string; count: number };
 
-export function Showroom({ projects, filters }: { projects: Project[]; filters: Filter[] }) {
-  const [active, setActive] = useState<ProjectCategory | "all">("all");
-  const { reducedMotion } = useRootFlags();
+const urlListeners = new Set<() => void>();
+function subscribeUrl(cb: () => void) {
+  urlListeners.add(cb);
+  window.addEventListener("popstate", cb);
+  return () => {
+    urlListeners.delete(cb);
+    window.removeEventListener("popstate", cb);
+  };
+}
+const readFilterParam = () => new URLSearchParams(window.location.search).get("filtre");
 
-  // Shareable state: /projets?filtre=ai-data
-  useEffect(() => {
-    const f = new URLSearchParams(window.location.search).get("filtre");
-    if (f && filters.some((x) => x.id === f)) setActive(f as ProjectCategory);
-  }, [filters]);
+export function Showroom({ projects, filters }: { projects: Project[]; filters: Filter[] }) {
+  const { reducedMotion } = useRootFlags();
+  // The URL is the source of truth for the filter (shareable: /projets?filtre=ai-data).
+  const param = useSyncExternalStore(subscribeUrl, readFilterParam, () => null);
+  const active: ProjectCategory | "all" = param && filters.some((f) => f.id === param) ? (param as ProjectCategory) : "all";
 
   const choose = (id: ProjectCategory | "all") => {
-    setActive(id);
     const url = new URL(window.location.href);
     if (id === "all") url.searchParams.delete("filtre");
     else url.searchParams.set("filtre", id);
-    window.history.replaceState(null, "", url);
+    window.history.replaceState(window.history.state, "", url);
+    urlListeners.forEach((l) => l());
   };
 
   const visible = active === "all" ? projects : projects.filter((p) => p.categories.includes(active));

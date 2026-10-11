@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { KoudAI } from "@/components/chat/KoudAI";
+import { KoudAILauncher } from "@/components/chat/KoudAILauncher";
+import { HydrationMark } from "@/components/layout/HydrationMark";
 import { SITE } from "@/content/site";
 import { themeBootstrapScript } from "@/lib/theme";
 
@@ -63,7 +64,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <SiteFooter />
-        <KoudAI />
+        <KoudAILauncher />
+        <HydrationMark />
       </body>
     </html>
   );

@@ -27,8 +27,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setMenuOpen(false), [pathname]);
-
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div
@@ -103,6 +101,7 @@ export function SiteHeader() {
                           <Link
                             href={item.href}
                             aria-current={active ? "page" : undefined}
+                            onClick={() => setMenuOpen(false)}
                             className="flex min-h-16 items-baseline gap-4 py-3"
                           >
                             <span className="meta w-6 text-muted">{String(i + 1).padStart(2, "0")}</span>

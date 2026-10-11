@@ -40,11 +40,9 @@ export function useRootFlags() {
 
 /** Stored user preferences + setter that persists and applies them. */
 export function usePrefs() {
-  const [prefs, setPrefsState] = useState<Prefs | null>(null);
+  const [prefs, setPrefsState] = useState<Prefs | null>(() => (typeof window === "undefined" ? null : readPrefs()));
 
   useEffect(() => {
-    const current = readPrefs();
-    setPrefsState(current);
     // Re-apply when OS settings change while "system"/"auto" values are in use.
     const queries = ["(prefers-color-scheme: light)", "(prefers-reduced-motion: reduce)", "(prefers-contrast: more)"].map(
       (q) => window.matchMedia(q),

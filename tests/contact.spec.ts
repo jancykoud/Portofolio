@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 const valid = { name: "Test", email: "test@example.com", subject: "question", message: "Bonjour, ceci est un test.", website: "" };
 

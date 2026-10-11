@@ -25,7 +25,7 @@ function json(body: unknown, status: number) {
 export async function POST(req: Request) {
   if (!isSameOrigin(req)) return json({ error: "forbidden" }, 403);
 
-  const limited = rateLimit(`contact:${clientIp(req.headers)}`, { limit: 5, windowMs: 10 * 60_000 });
+  const limited = rateLimit(`contact:${clientIp(req.headers)}`, { limit: Number(process.env.CONTACT_RATE_LIMIT) || 5, windowMs: 10 * 60_000 });
   if (!limited.ok) return json({ error: "rate_limited", message: "Trop d'envois rapprochés. Réessayez dans quelques minutes." }, 429);
 
   let data: z.infer<typeof Schema>;

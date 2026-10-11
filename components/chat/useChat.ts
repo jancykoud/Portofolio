@@ -10,21 +10,20 @@ const STORAGE_KEY = "koud-ai:session";
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 export function useChat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      return JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "[]") as ChatMessage[];
+    } catch {
+      return [];
+    }
+  });
   const [status, setStatus] = useState<ChatStatus>("checking");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   // Session-only history: cleared when the tab closes. Nothing is stored server-side.
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (raw) setMessages(JSON.parse(raw) as ChatMessage[]);
-    } catch {
-      /* ignore */
-    }
-  }, []);
   useEffect(() => {
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));

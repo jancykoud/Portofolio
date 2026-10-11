@@ -15,6 +15,9 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
     { name: "mobile", use: { ...devices["Pixel 7"] }, grep: /@mobile/ },
+    { name: "firefox", use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 } } },
+    { name: "webkit", use: { ...devices["Desktop Safari"], viewport: { width: 1440, height: 900 } } },
+    { name: "mobile-safari", use: { ...devices["iPhone 15"] }, grep: /@mobile/ },
   ],
   // Tests run against the production build. Keys are deliberately absent:
   // KOUD AI and the contact form are exercised in their "not configured" state,
@@ -23,6 +26,6 @@ export default defineConfig({
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: true,
-    env: { ANTHROPIC_API_KEY: "", RESEND_API_KEY: "" },
+    env: { ANTHROPIC_API_KEY: "", RESEND_API_KEY: "", CONTACT_RATE_LIMIT: "1000" },
   },
 });

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { CONTRAST_PAIRS, contrastRatio, parseColor } from "../lib/contrast";
 import { setPrefs } from "./helpers";
 
@@ -76,7 +76,8 @@ test.describe("theme system", () => {
 test.describe("motion & performance", () => {
   // Headless Chromium has no GPU: WebGL would run on the CPU (SwiftShader), so the
   // scene must refuse it and keep the static globe. On real GPUs data-scene is "webgl".
-  test("software-only WebGL falls back to the static globe", async ({ page }) => {
+  test("software-only WebGL falls back to the static globe", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "GPU availability in headless mode differs per engine");
     await page.goto("/");
     await page.waitForTimeout(2000);
     await expect(page.locator("[data-scene]")).toHaveAttribute("data-scene", "static");

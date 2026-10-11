@@ -1,6 +1,6 @@
 "use client";
 
-import { openKoudAI } from "./KoudAI";
+import { openKoudAI } from "./shared";
 import { buttonClasses } from "@/components/ui/Button";
 import { Sparkles } from "lucide-react";
 
