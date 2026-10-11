@@ -114,3 +114,18 @@ CLS 0 partout ; TBT ≤ 80 ms.
 - **Préversion Netlify** : 27/27 tests i18n et 135 tests Chromium réussis contre l'URL déployée ; routage identique à la version locale.
 - **Lighthouse sur la préversion (anglais)** : `/en` 92 mobile / 100 desktop (LCP mobile 3,0 s, une seule mesure) ; `/en/projects/declic` 99 / 100 ; `/en/about` 99 / 100. Accessibilité, bonnes pratiques et SEO à 100 partout.
 - Bug trouvé et corrigé par les tests : `usePathname()` renvoie le chemin réécrit (`/fr/…`), ce qui cassait le sélecteur de langue et l'état actif de la navigation.
+
+---
+
+## 9. Mise en production (11/10/2026) — incidents et correctifs
+
+| Heure (UTC) | Événement |
+|---|---|
+| ~14:40 | Fusion dans `main` → build Netlify CI « ready », mais **toutes les URL en 404** : le runtime Next.js n'a pas été appliqué en CI (0 fonction, 0 règle de routage), alors qu'il l'était avec la CLI locale |
+| 14:46 | **Service rétabli** en publiant le déploiement de préversion déjà testé |
+| 14:48 | Correctif : `@netlify/plugin-nextjs` déclaré dans `netlify.toml`. Build CI vérifié sur son URL propre **avec publication automatique verrouillée**, puis publié |
+| 14:52 | Second correctif : le CDN de production injecte un commentaire « hosted on Netlify » dans `<head>`, ce qui provoque une erreur d'hydratation React #418 (absente des préversions). Le script de thème retire ce nœud avant hydratation ; un test de régression reproduit l'injection (il échoue sans le correctif) |
+
+État final : `koud-portfolio.netlify.app` sert la nouvelle version FR/EN ; **139 tests Chromium réussis contre le domaine de production**. Publication automatique réactivée.
+
+Autre constat : le projet Vercel `koud-portofolio-cv`, relié au même dépôt, échouait faute de Node 20 (version retirée) → `engines.node >=22` ajouté ; il se met désormais à jour avec `main`. L'adresse `koud-portofofio.vercel.app` est un ancien projet de 2024, sans lien avec la refonte.
