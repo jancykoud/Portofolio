@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { SUBJECTS } from "@/content/contact";
 import { SITE } from "@/content/site";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
 type Errors = Partial<Record<"name" | "email" | "message" | "form", string>>;
 
@@ -12,6 +13,7 @@ const field =
   "w-full rounded-[var(--radius)] border border-line-strong bg-bg/60 px-4 py-3 text-[0.95rem] outline-none transition-colors placeholder:text-muted/80 focus:border-fg aria-[invalid=true]:border-danger";
 
 export function ContactForm() {
+  const t = useDict().contact;
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
   const startedAt = useRef(0);
@@ -27,9 +29,9 @@ export function ContactForm() {
 
   const validate = (fd: FormData): Errors => {
     const e: Errors = {};
-    if (String(fd.get("name") ?? "").trim().length < 2) e.name = "Indiquez votre nom (2 caractères minimum).";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(fd.get("email") ?? ""))) e.email = "Adresse e-mail invalide.";
-    if (String(fd.get("message") ?? "").trim().length < 10) e.message = "Votre message doit contenir au moins 10 caractères.";
+    if (String(fd.get("name") ?? "").trim().length < 2) e.name = t.errors.name;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(fd.get("email") ?? ""))) e.email = t.errors.email;
+    if (String(fd.get("message") ?? "").trim().length < 10) e.message = t.errors.message;
     return e;
   };
 
@@ -50,15 +52,26 @@ export function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...Object.fromEntries(fd), startedAt: startedAt.current }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; message?: string; fields?: Errors };
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; fields?: Errors };
       if (!res.ok || !data.ok) {
-        setErrors({ ...(data.fields ?? {}), form: data.message ?? "L'envoi a échoué. Réessayez dans un instant." });
+        // Server field messages are French; map codes to the current language instead.
+        const fieldErrors: Errors = {};
+        for (const k of ["name", "email", "message"] as const) if (data.fields?.[k]) fieldErrors[k] = t.errors[k];
+        const form =
+          data.error === "not_configured"
+            ? t.errors.notConfigured(SITE.email)
+            : data.error === "rate_limited"
+              ? t.errors.rateLimited
+              : data.error === "invalid"
+                ? undefined
+                : t.errors.failed(SITE.email);
+        setErrors({ ...fieldErrors, ...(form ? { form } : {}) });
         setStatus("error");
         return;
       }
       setStatus("sent");
     } catch {
-      setErrors({ form: `Connexion impossible. Vous pouvez écrire directement à ${SITE.email}.` });
+      setErrors({ form: t.errors.network(SITE.email) });
       setStatus("error");
     }
   }
@@ -67,8 +80,8 @@ export function ContactForm() {
     return (
       <div role="status" className="flex min-h-[420px] flex-col items-center justify-center rounded-[var(--radius-lg)] border border-line bg-surface p-8 text-center">
         <CheckCircle2 className="size-10 text-success" aria-hidden />
-        <h2 className="mt-5 text-2xl font-semibold tracking-tight">Message envoyé.</h2>
-        <p className="mt-3 max-w-sm text-muted">Merci ! Je reviens vers vous personnellement à l'adresse indiquée.</p>
+        <h2 className="mt-5 text-2xl font-semibold tracking-tight">{t.sentTitle}</h2>
+        <p className="mt-3 max-w-sm text-muted">{t.sentBody}</p>
         <button
           onClick={() => {
             startedAt.current = Date.now();
@@ -76,7 +89,7 @@ export function ContactForm() {
           }}
           className="mt-6 min-h-11 text-sm text-accent-fg underline-offset-4 hover:underline"
         >
-          Envoyer un autre message
+          {t.another}
         </button>
       </div>
     );
@@ -94,46 +107,46 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="text-sm font-medium">
-            Nom <span aria-hidden className="text-muted">*</span>
+            {t.name} <span aria-hidden className="text-muted">*</span>
           </label>
           <input id="name" name="name" autoComplete="name" required maxLength={100} className={cn(field, "mt-2")} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
           {err("name")}
         </div>
         <div>
           <label htmlFor="email" className="text-sm font-medium">
-            E-mail <span aria-hidden className="text-muted">*</span>
+            {t.email} <span aria-hidden className="text-muted">*</span>
           </label>
           <input id="email" name="email" type="email" autoComplete="email" required maxLength={200} className={cn(field, "mt-2")} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
           {err("email")}
         </div>
         <div>
           <label htmlFor="company" className="text-sm font-medium">
-            Organisation <span className="text-muted">(facultatif)</span>
+            {t.company} <span className="text-muted">{t.optional}</span>
           </label>
           <input id="company" name="company" autoComplete="organization" maxLength={120} className={cn(field, "mt-2")} />
         </div>
         <div>
           <label htmlFor="subject" className="text-sm font-medium">
-            Sujet
+            {t.subject}
           </label>
           <select id="subject" name="subject" ref={subjectRef} defaultValue="mission" className={cn(field, "mt-2 appearance-none bg-[length:12px] bg-[right_1rem_center] bg-no-repeat pr-10")} style={{ backgroundImage: "linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%)", backgroundPosition: "calc(100% - 20px) 50%, calc(100% - 15px) 50%", backgroundSize: "5px 5px, 5px 5px" }}>
             {SUBJECTS.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.label}
+                {t.subjects[s.id]}
               </option>
             ))}
           </select>
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="message" className="text-sm font-medium">
-            Message <span aria-hidden className="text-muted">*</span>
+            {t.message} <span aria-hidden className="text-muted">*</span>
           </label>
-          <textarea id="message" name="message" rows={7} required maxLength={3000} placeholder="Contexte, besoin, échéances éventuelles…" className={cn(field, "mt-2 resize-y")} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
+          <textarea id="message" name="message" rows={7} required maxLength={3000} placeholder={t.placeholder} className={cn(field, "mt-2 resize-y")} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
           {err("message")}
         </div>
         {/* Honeypot: hidden from people and assistive tech, filled by naive bots */}
         <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-          <label htmlFor="website">Site web</label>
+          <label htmlFor="website">{t.website}</label>
           <input id="website" name="website" tabIndex={-1} autoComplete="off" />
         </div>
       </div>
@@ -146,7 +159,7 @@ export function ContactForm() {
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-relaxed text-muted sm:max-w-xs">
-          Vos données servent uniquement à vous répondre. Elles sont transmises par e-mail et ne sont pas stockées sur ce site.
+          {t.privacy}
         </p>
         <button
           type="submit"
@@ -155,11 +168,11 @@ export function ContactForm() {
         >
           {status === "sending" ? (
             <>
-              <Loader2 className="size-4 animate-spin" aria-hidden /> Envoi…
+              <Loader2 className="size-4 animate-spin" aria-hidden /> {t.sending}
             </>
           ) : (
             <>
-              Envoyer le message <ArrowRight className="size-4" aria-hidden />
+              {t.send} <ArrowRight className="size-4" aria-hidden />
             </>
           )}
         </button>

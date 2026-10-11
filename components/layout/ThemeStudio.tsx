@@ -5,6 +5,7 @@ import { Check, Palette, X } from "lucide-react";
 import { usePrefs } from "@/lib/hooks";
 import { THEMES, THEME_SWATCHES, type Prefs, type ResolvedTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
 function Swatch({ theme }: { theme: ResolvedTheme | "system" }) {
   if (theme === "system") {
@@ -67,6 +68,7 @@ function Segmented<T extends string>({
 
 export function ThemeStudio({ className }: { className?: string }) {
   const { prefs, update } = usePrefs();
+  const t = useDict().theme;
   const p: Prefs = prefs ?? { theme: "system", contrast: "standard", motion: "auto", perf: "auto" };
 
   return (
@@ -76,7 +78,7 @@ export function ThemeStudio({ className }: { className?: string }) {
           "inline-flex size-11 items-center justify-center rounded-full border border-line text-fg transition-colors hover:border-line-strong hover:bg-surface-2",
           className,
         )}
-        aria-label="Ouvrir le Theme Studio (thème, contraste, animations)"
+        aria-label={t.open}
       >
         <Palette className="size-[18px]" aria-hidden />
       </Dialog.Trigger>
@@ -87,24 +89,24 @@ export function ThemeStudio({ className }: { className?: string }) {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <Dialog.Title className="text-lg font-semibold tracking-tight">Theme Studio</Dialog.Title>
+              <Dialog.Title className="text-lg font-semibold tracking-tight">{t.title}</Dialog.Title>
               <Dialog.Description className="mt-1 text-sm text-muted">
-                Vos préférences sont enregistrées sur cet appareil uniquement.
+                {t.description}
               </Dialog.Description>
             </div>
-            <Dialog.Close className="inline-flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-surface-2" aria-label="Fermer">
+            <Dialog.Close className="inline-flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-surface-2" aria-label={t.close}>
               <X className="size-4" aria-hidden />
             </Dialog.Close>
           </div>
 
           <fieldset className="mt-5">
-            <legend className="text-sm font-medium">Thème</legend>
+            <legend className="text-sm font-medium">{t.theme}</legend>
             <div className="mt-2.5 grid grid-cols-2 gap-2">
-              {THEMES.map((t) => {
-                const active = p.theme === t.id;
+              {THEMES.map((th) => {
+                const active = p.theme === th.id;
                 return (
                   <label
-                    key={t.id}
+                    key={th.id}
                     className={cn(
                       "relative flex cursor-pointer items-center gap-3 rounded-[var(--radius)] border p-2.5 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus",
                       active ? "border-fg bg-surface-2" : "border-line hover:border-line-strong",
@@ -113,15 +115,15 @@ export function ThemeStudio({ className }: { className?: string }) {
                     <input
                       type="radio"
                       name="koud-theme"
-                      value={t.id}
+                      value={th.id}
                       checked={active}
-                      onChange={() => update({ theme: t.id })}
+                      onChange={() => update({ theme: th.id })}
                       className="sr-only"
                     />
-                    <Swatch theme={t.id} />
+                    <Swatch theme={th.id} />
                     <span className="min-w-0">
-                      <span className="block text-sm font-medium">{t.label}</span>
-                      <span className="block truncate text-xs text-muted">{t.hint}</span>
+                      <span className="block text-sm font-medium">{th.label}</span>
+                      <span className="block truncate text-xs text-muted">{t.hints[th.id]}</span>
                     </span>
                     {active && <Check className="absolute top-2 right-2 size-3.5 text-accent-fg" aria-hidden />}
                   </label>
@@ -132,34 +134,34 @@ export function ThemeStudio({ className }: { className?: string }) {
 
           <div className="mt-5 space-y-4 border-t border-line pt-5">
             <Segmented
-              legend="Contraste"
-              hint="Renforce textes secondaires et bordures."
+              legend={t.contrast}
+              hint={t.contrastHint}
               value={p.contrast}
               onChange={(v) => update({ contrast: v })}
               options={[
-                { value: "standard", label: "Standard" },
-                { value: "high", label: "Élevé" },
+                { value: "standard", label: t.standard },
+                { value: "high", label: t.high },
               ]}
             />
             <Segmented
-              legend="Animations"
-              hint="« Auto » respecte le réglage de votre appareil."
+              legend={t.motion}
+              hint={t.motionHint}
               value={p.motion}
               onChange={(v) => update({ motion: v })}
               options={[
-                { value: "auto", label: "Auto" },
-                { value: "reduced", label: "Réduites" },
+                { value: "auto", label: t.auto },
+                { value: "reduced", label: t.reduced },
               ]}
             />
             <Segmented
-              legend="Performance"
-              hint="« Allégé » coupe la 3D, les flous et la parallaxe."
+              legend={t.perf}
+              hint={t.perfHint}
               value={p.perf}
               onChange={(v) => update({ perf: v })}
               options={[
-                { value: "auto", label: "Auto" },
-                { value: "full", label: "Complet" },
-                { value: "lite", label: "Allégé" },
+                { value: "auto", label: t.auto },
+                { value: "full", label: t.full },
+                { value: "lite", label: t.lite },
               ]}
             />
           </div>

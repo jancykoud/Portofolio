@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Clapperboard } from "lucide-react";
 import type { VideoSource } from "@/content/video";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
 type Chapter = { time: string; title: string };
 
@@ -16,6 +17,7 @@ const toSeconds = (t: string) => t.split(":").reduce((acc, n) => acc * 60 + Numb
  */
 export function VideoPlayer({ source, chapters }: { source: VideoSource | null; chapters: readonly Chapter[] }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const t = useDict().video;
   const [current, setCurrent] = useState(0);
 
   if (!source) {
@@ -24,9 +26,9 @@ export function VideoPlayer({ source, chapters }: { source: VideoSource | null; 
         <div className="atmosphere absolute inset-0 -z-10" aria-hidden />
         <div className="tech-grid absolute inset-0 -z-10 opacity-40" aria-hidden />
         <Clapperboard className="size-8 text-accent-fg" aria-hidden />
-        <p className="mt-4 text-xl font-semibold tracking-tight sm:text-2xl">Vidéo en préparation</p>
+        <p className="mt-4 text-xl font-semibold tracking-tight sm:text-2xl">{t.pendingTitle}</p>
         <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
-          Le tournage n'a pas encore eu lieu. Le lecteur est prêt (sous-titres FR/EN, chapitres, chargement différé) ; le storyboard ci-dessous décrit le film prévu.
+          {t.pendingBody}
         </p>
       </div>
     );
@@ -52,9 +54,9 @@ export function VideoPlayer({ source, chapters }: { source: VideoSource | null; 
         {source.captions.map((c, i) => (
           <track key={c.lang} kind="subtitles" srcLang={c.lang} label={c.label} src={c.src} default={i === 0} />
         ))}
-        Votre navigateur ne lit pas la vidéo. <a href={source.mp4}>Télécharger la vidéo</a>.
+        {t.unsupported} <a href={source.mp4}>{t.download}</a>.
       </video>
-      <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6" aria-label="Chapitres">
+      <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6" aria-label={t.chapters}>
         {chapters.map((c, i) => (
           <li key={c.time}>
             <button

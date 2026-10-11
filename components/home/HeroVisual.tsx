@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery, useRootFlags } from "@/lib/hooks";
-import { SITE } from "@/content/site";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 
@@ -35,7 +34,7 @@ export function StaticGlobe() {
   );
 }
 
-export function HeroVisual() {
+export function HeroVisual({ alt }: { alt: string }) {
   const { lite, reducedMotion } = useRootFlags();
   const desktop = useMediaQuery("(min-width: 1024px)");
   const [idle, setIdle] = useState(false);
@@ -66,7 +65,7 @@ export function HeroVisual() {
         />
         <Image
           src="/images/portrait-cutout.png"
-          alt={SITE.portrait.alt}
+          alt={alt}
           fill
           priority
           sizes="(min-width: 1024px) 420px, 70vw"

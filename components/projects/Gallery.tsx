@@ -6,10 +6,12 @@ import { ChevronLeft, ChevronRight, Expand, X, ZoomIn, ZoomOut } from "lucide-re
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Screen } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
-const DEVICE_LABEL: Record<Screen["device"], string> = { desktop: "Desktop", tablet: "Tablette", mobile: "Mobile" };
 
 export function Gallery({ screens, projectName }: { screens: Screen[]; projectName: string }) {
+  const t = useDict().gallery;
+  const DEVICE_LABEL = t.devices;
   const devices = useMemo(() => (["desktop", "tablet", "mobile"] as const).filter((d) => screens.some((s) => s.device === d)), [screens]);
   const [device, setDevice] = useState<Screen["device"]>(devices[0] ?? "desktop");
   const list = screens.filter((s) => s.device === device);
@@ -41,7 +43,7 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         {devices.length > 1 ? (
-          <div role="group" aria-label="Type d'écran" className="inline-flex rounded-full border border-line bg-surface p-1">
+          <div role="group" aria-label={t.deviceGroup} className="inline-flex rounded-full border border-line bg-surface p-1">
             {devices.map((d) => (
               <button
                 key={d}
@@ -67,8 +69,8 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
       <div
         className="group relative mt-5 overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface-2 focus-within:outline-none"
         role="region"
-        aria-roledescription="carrousel"
-        aria-label={`Interfaces de ${projectName}`}
+        aria-roledescription={t.carousel}
+        aria-label={t.region(projectName)}
         tabIndex={0}
         onKeyDown={onKey}
       >
@@ -84,10 +86,10 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
         </div>
         {list.length > 1 && (
           <>
-            <button onClick={() => go(-1)} className="glass absolute top-1/2 left-3 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong" aria-label="Écran précédent">
+            <button onClick={() => go(-1)} className="glass absolute top-1/2 left-3 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong" aria-label={t.prev}>
               <ChevronLeft className="size-5" aria-hidden />
             </button>
-            <button onClick={() => go(1)} className="glass absolute top-1/2 right-3 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong" aria-label="Écran suivant">
+            <button onClick={() => go(1)} className="glass absolute top-1/2 right-3 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong" aria-label={t.next}>
               <ChevronRight className="size-5" aria-hidden />
             </button>
           </>
@@ -96,19 +98,19 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
           onClick={() => setOpen(true)}
           className="glass absolute right-3 bottom-3 inline-flex min-h-10 items-center gap-2 rounded-full border border-line-strong px-3.5 text-sm"
         >
-          <Expand className="size-4" aria-hidden /> Plein écran
+          <Expand className="size-4" aria-hidden /> {t.fullscreen}
         </button>
       </div>
       <p className="mt-3 text-sm text-muted">{current.caption}</p>
 
       {list.length > 1 && (
-        <div ref={stripRef} className="relative mt-5 flex gap-3 overflow-x-auto pb-2" aria-label="Miniatures">
+        <div ref={stripRef} className="relative mt-5 flex gap-3 overflow-x-auto pb-2" aria-label={t.thumbnails}>
           {list.map((s, i) => (
             <button
               key={s.src}
               data-i={i}
               onClick={() => setIndex(i)}
-              aria-label={`Afficher : ${s.caption}`}
+              aria-label={t.show(s.caption)}
               aria-current={i === index}
               className={cn(
                 "relative h-20 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border transition-[border-color,opacity]",
@@ -131,10 +133,10 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
                 {projectName} — {String(index + 1).padStart(2, "0")}/{String(list.length).padStart(2, "0")}
               </Dialog.Title>
               <div className="flex gap-2">
-                <button onClick={() => setZoom((z) => !z)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label={zoom ? "Dézoomer" : "Zoomer"} aria-pressed={zoom}>
+                <button onClick={() => setZoom((z) => !z)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label={zoom ? t.zoomOut : t.zoomIn} aria-pressed={zoom}>
                   {zoom ? <ZoomOut className="size-5" aria-hidden /> : <ZoomIn className="size-5" aria-hidden />}
                 </button>
-                <Dialog.Close className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Fermer">
+                <Dialog.Close className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label={t.close}>
                   <X className="size-5" aria-hidden />
                 </Dialog.Close>
               </div>
@@ -149,11 +151,11 @@ export function Gallery({ screens, projectName }: { screens: Screen[]; projectNa
               )}
             </div>
             <div className="flex items-center justify-between gap-3 p-3 sm:p-4">
-              <button onClick={() => go(-1)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Écran précédent" disabled={list.length < 2}>
+              <button onClick={() => go(-1)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label={t.prev} disabled={list.length < 2}>
                 <ChevronLeft className="size-5" aria-hidden />
               </button>
               <Dialog.Description className="text-center text-sm text-white/80">{current.caption}</Dialog.Description>
-              <button onClick={() => go(1)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Écran suivant" disabled={list.length < 2}>
+              <button onClick={() => go(1)} className="inline-flex size-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label={t.next} disabled={list.length < 2}>
                 <ChevronRight className="size-5" aria-hidden />
               </button>
             </div>

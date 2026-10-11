@@ -4,15 +4,9 @@ import { useId, useState } from "react";
 import { Boxes, Cpu, Database, FileCheck2, Server, Users } from "lucide-react";
 import type { ArchitectureNode, Project } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
-const KIND = {
-  actor: { icon: Users, label: "Acteur" },
-  app: { icon: Boxes, label: "Application" },
-  service: { icon: Server, label: "Service" },
-  data: { icon: Database, label: "Données" },
-  standard: { icon: FileCheck2, label: "Standard" },
-  device: { icon: Cpu, label: "Terrain" },
-} as const;
+const KIND_ICONS = { actor: Users, app: Boxes, service: Server, data: Database, standard: FileCheck2, device: Cpu } as const;
 
 const COLS = 4;
 const ROWS = 3;
@@ -26,6 +20,10 @@ export function ArchitectureDiagram({
   compact?: boolean;
 }) {
   const { nodes, edges, note } = architecture;
+  const t = useDict().architecture;
+  const KIND = Object.fromEntries(
+    (Object.keys(KIND_ICONS) as (keyof typeof KIND_ICONS)[]).map((k) => [k, { icon: KIND_ICONS[k], label: t.kinds[k] }]),
+  ) as Record<keyof typeof KIND_ICONS, { icon: (typeof KIND_ICONS)[keyof typeof KIND_ICONS]; label: string }>;
   const [selected, setSelected] = useState<string>(nodes.find((n) => n.kind === "app")?.id ?? nodes[0]!.id);
   const detailId = useId();
   const current = nodes.find((n) => n.id === selected)!;
@@ -122,7 +120,7 @@ export function ArchitectureDiagram({
         </p>
       </div>
       <figcaption className="mt-3 text-xs leading-relaxed text-muted">
-        <span className="hidden sm:inline">Sélectionnez un élément pour afficher son rôle. </span>
+        <span className="hidden sm:inline">{t.hint}</span>
         {note}
       </figcaption>
     </figure>

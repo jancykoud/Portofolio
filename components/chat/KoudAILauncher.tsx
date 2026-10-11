@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Orb } from "./shared";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
 // The panel (dialog, streaming, rich text) is only downloaded when first needed.
 const KoudAIPanel = dynamic(() => import("./KoudAI"), { ssr: false });
@@ -13,6 +14,7 @@ export function KoudAILauncher() {
   const [loaded, setLoaded] = useState(false);
   const [question, setQuestion] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const t = useDict().chat;
 
   const openPanel = useCallback((q?: string) => {
     if (q) setQuestion(q);
@@ -39,7 +41,7 @@ export function KoudAILauncher() {
         onFocus={() => void import("./KoudAI")}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Ouvrir KOUD AI, l'assistant du portfolio"
+        aria-label={t.open}
         className={cn(
           "glass fixed right-4 bottom-4 z-40 inline-flex h-14 items-center gap-3 rounded-full border border-line-strong p-1.5 shadow-[var(--shadow)] transition-transform hover:-translate-y-0.5 sm:right-6 sm:bottom-6 sm:pr-5",
           open && "pointer-events-none opacity-0",

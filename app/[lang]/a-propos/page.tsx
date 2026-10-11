@@ -8,31 +8,21 @@ import { Eyebrow, SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { SOCIAL_ICONS } from "@/components/ui/Icons";
 import { AskKoud } from "@/components/chat/AskKoud";
-import { COURSES, EXPERIENCE, SKILL_GROUPS } from "@/content/experience";
 import { SITE } from "@/content/site";
+import { SITE_EN } from "@/content/en/other";
+import { getCourses, getExperience, getSkillGroups } from "@/lib/content";
+import { href } from "@/lib/i18n/routing";
+import { alternates, resolveLocale, type LangParams } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "À propos",
-  description:
-    "Parcours de Jancy Koud Banga : de l'enseignement des mathématiques au Congo à l'ingénierie logicielle en France — expériences, formations, expertise et CV.",
-  alternates: { canonical: "/a-propos" },
-};
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const { locale, t } = await resolveLocale(params);
+  return { title: t.about.metaTitle, description: t.about.metaDescription, alternates: alternates(locale, "/a-propos") };
+}
 
-const METHOD = [
-  { step: "Écouter", body: "Comprendre le métier, les contraintes et les utilisateurs réels avant toute ligne de code." },
-  { step: "Modéliser", body: "Concevoir le modèle de données et l'architecture ; privilégier les standards ouverts." },
-  { step: "Livrer", body: "Itérations courtes, démonstrations régulières, déploiement automatisé dès le début." },
-  { step: "Transmettre", body: "Documenter, expliquer, rendre l'équipe autonome — un réflexe hérité de l'enseignement." },
-];
-
-const COLLABS = [
-  { org: "CNRS · INRAE · IRD · UCA", context: "Projet ANR TERRA FORMA — DECLIC", href: "/projets/declic" },
-  { org: "Orange — DSI Data/IA", context: "Stage chef de projet / développeur, DataMesh" },
-  { org: "GSI Concept", context: "Développement full-stack" },
-  { org: "Tash-Cash Agency", context: "Mission freelance", href: "/projets/tash-cash-agency" },
-];
-
-export default function AboutPage() {
+export default async function AboutPage({ params }: LangParams) {
+  const { locale, t: dict } = await resolveLocale(params);
+  const t = dict.about;
+  const portraitAlt = locale === "en" ? SITE_EN.portraitAlt : SITE.portrait.alt;
   return (
     <>
       {/* ── Intro ───────────────────────────── */}
@@ -40,21 +30,17 @@ export default function AboutPage() {
         <div className="atmosphere absolute inset-0 -z-10" aria-hidden />
         <div className="container-page grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="pb-4">
-            <Eyebrow className="hero-in">À propos</Eyebrow>
+            <Eyebrow className="hero-in">{t.eyebrow}</Eyebrow>
             <h1 id="about-title" className="display-xl mt-5">
-              <span className="block overflow-hidden"><span className="hero-line block" style={{ "--i": 1 } as React.CSSProperties}>Mon parcours,</span></span>
-              <span className="block overflow-hidden"><span className="hero-line block" style={{ "--i": 2 } as React.CSSProperties}>ma vision.</span></span>
+              <span className="block overflow-hidden"><span className="hero-line block" style={{ "--i": 1 } as React.CSSProperties}>{t.title[0]}</span></span>
+              <span className="block overflow-hidden"><span className="hero-line block" style={{ "--i": 2 } as React.CSSProperties}>{t.title[1]}</span></span>
             </h1>
             <div className="hero-in mt-8 max-w-[60ch] space-y-4 text-lg leading-relaxed text-muted" style={{ "--i": 4 } as React.CSSProperties}>
               <p>
-                Je suis <strong className="font-medium text-fg">Jancy Koud Banga</strong>. Je travaille à la croisée de l'ingénierie
-                logicielle et de la conception de produits numériques : j'aime transformer des idées complexes en solutions simples,
-                utiles et durables.
+                {t.introName} <strong className="font-medium text-fg">Jancy Koud Banga</strong>. {t.intro1}
               </p>
               <p>
-                J'ai d'abord enseigné les mathématiques au Congo, avant deux masters en France — informatique (technologies cloud) et
-                management des systèmes d'information. Aujourd'hui, je conçois des plateformes de données pour la recherche
-                environnementale et des produits web, de l'architecture à la mise en production.
+                {t.intro2}
               </p>
             </div>
             <div className="hero-in mt-9 flex flex-wrap items-center gap-3" style={{ "--i": 5 } as React.CSSProperties}>
@@ -63,22 +49,23 @@ export default function AboutPage() {
                   key={r.href}
                   href={r.href}
                   download
+                  hrefLang="fr"
                   className={
                     i === 0
                       ? "inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-6 text-[0.95rem] font-medium text-accent-ink"
                       : "inline-flex min-h-12 items-center gap-2 rounded-full border border-line-strong px-6 text-[0.95rem] font-medium hover:border-fg"
                   }
                 >
-                  <Download className="size-4" aria-hidden /> {r.label} <span className="font-mono text-xs">PDF</span>
+                  <Download className="size-4" aria-hidden /> {locale === "en" ? SITE_EN.resumes[i] : r.label} <span className="font-mono text-xs">{dict.common.pdf}</span>
                 </a>
               ))}
             </div>
-            <ul className="mt-6 flex gap-1" aria-label="Profils en ligne">
+            <ul className="mt-6 flex gap-1" aria-label={t.profiles}>
               {SITE.socials.map((s) => {
                 const Icon = SOCIAL_ICONS[s.label]!;
                 return (
                   <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`${s.label} (nouvel onglet)`} className="inline-flex size-11 items-center justify-center rounded-full border border-line hover:border-line-strong">
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`${s.label} ${dict.nav.newTab}`} className="inline-flex size-11 items-center justify-center rounded-full border border-line hover:border-line-strong">
                       <Icon className="size-[18px]" />
                     </a>
                   </li>
@@ -91,7 +78,7 @@ export default function AboutPage() {
             <div className="absolute inset-x-[10%] bottom-[30%] h-[45%] rounded-full blur-3xl" style={{ background: "color-mix(in srgb, var(--atmo-1) 40%, transparent)" }} aria-hidden />
             <Image
               src="/images/portrait-cutout.png"
-              alt={SITE.portrait.alt}
+              alt={portraitAlt}
               fill
               priority
               sizes="(min-width: 1024px) 460px, 90vw"
@@ -101,12 +88,7 @@ export default function AboutPage() {
         </div>
         <div className="container-page">
           <dl className="grid grid-cols-2 gap-6 border-y border-line py-8 md:grid-cols-4">
-            {[
-              ["4", "diplômes de niveau master (maths, informatique, management)"],
-              ["2014", "début des études supérieures, ENS de Brazzaville"],
-              ["2", "pays d'études et de travail : Congo, France"],
-              ["FR · EN", "langues de travail"],
-            ].map(([v, l]) => (
+            {t.facts.map(([v, l]) => (
               <div key={l}>
                 <dt className="sr-only">{l}</dt>
                 <dd className="text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">{v}</dd>
@@ -121,21 +103,21 @@ export default function AboutPage() {
       <section className="container-page pt-24 sm:pt-32" aria-labelledby="parcours-title">
         <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <SectionHeading eyebrow="Parcours" title={<span id="parcours-title">Expériences et formations.</span>} lead="Ouvrez chaque étape pour le détail des missions et des technologies." />
+            <SectionHeading eyebrow={t.timelineEyebrow} title={<span id="parcours-title">{t.timelineTitle}</span>} lead={t.timelineLead} />
           </div>
-          <Timeline items={EXPERIENCE} />
+          <Timeline items={getExperience(locale)} />
         </div>
       </section>
 
       {/* ── Expertise ──────────────────────── */}
       <section className="container-page pt-24 sm:pt-32" aria-labelledby="expertise-title">
         <SectionHeading
-          eyebrow="Expertise"
-          title={<span id="expertise-title">Technologies pratiquées.</span>}
-          lead="Uniquement des outils utilisés dans des projets ou expériences listés sur ce site. Pas de pourcentages : la preuve est dans les projets."
+          eyebrow={t.expertiseEyebrow}
+          title={<span id="expertise-title">{t.expertiseTitle}</span>}
+          lead={t.expertiseLead}
         />
         <div className="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {SKILL_GROUPS.map((g, i) => (
+          {getSkillGroups(locale).map((g, i) => (
             <Reveal key={g.label} delay={i * 50} className="bg-bg p-6">
               <h3 className="meta text-accent-fg">{g.label}</h3>
               <ul className="mt-4 flex flex-wrap gap-2">
@@ -152,9 +134,9 @@ export default function AboutPage() {
 
       {/* ── Method ─────────────────────────── */}
       <section className="container-page pt-24 sm:pt-32" aria-labelledby="method-title">
-        <SectionHeading eyebrow="Philosophie" title={<span id="method-title">Comment je travaille.</span>} />
+        <SectionHeading eyebrow={t.methodEyebrow} title={<span id="method-title">{t.methodTitle}</span>} />
         <ol className="mt-12 grid gap-6 md:grid-cols-4">
-          {METHOD.map((m, i) => (
+          {t.method.map((m, i) => (
             <Reveal as="li" key={m.step} delay={i * 70} className="relative border-t-2 border-accent pt-6">
               <span className="meta text-muted">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="mt-3 text-2xl font-semibold tracking-[-0.025em]">{m.step}</h3>
@@ -165,18 +147,18 @@ export default function AboutPage() {
       </section>
 
       {/* ── Collaborations + continuing education ── */}
-      <section className="container-page grid gap-16 pt-24 sm:pt-32 lg:grid-cols-2" aria-label="Collaborations et formation continue">
+      <section className="container-page grid gap-16 pt-24 sm:pt-32 lg:grid-cols-2" aria-label={t.collabSection}>
         <div>
-          <SectionHeading eyebrow="Collaborations" title="Avec qui j'ai travaillé." />
+          <SectionHeading eyebrow={t.collabEyebrow} title={t.collabTitle} />
           <ul className="mt-8 divide-y divide-line border-y border-line">
-            {COLLABS.map((c) => (
+            {t.collabs.map((c) => (
               <li key={c.org} className="flex items-center justify-between gap-4 py-5">
                 <div>
                   <p className="font-medium">{c.org}</p>
                   <p className="mt-1 text-sm text-muted">{c.context}</p>
                 </div>
                 {c.href && (
-                  <Link href={c.href} className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line hover:border-fg" aria-label={`Voir : ${c.context}`}>
+                  <Link href={href(locale, c.href)} className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line hover:border-fg" aria-label={t.see(c.context)}>
                     <ArrowRight className="size-4" aria-hidden />
                   </Link>
                 )}
@@ -185,9 +167,9 @@ export default function AboutPage() {
           </ul>
         </div>
         <div id="formation" className="scroll-mt-28">
-          <SectionHeading eyebrow="Formation continue" title="En cours d'apprentissage." />
+          <SectionHeading eyebrow={t.coursesEyebrow} title={t.coursesTitle} />
           <ul className="mt-8 grid gap-2 sm:grid-cols-2">
-            {COURSES.map((c) => (
+            {getCourses(locale).map((c) => (
               <li key={c.title} className="rounded-[var(--radius)] border border-line p-4">
                 <p className="meta text-[0.65rem] text-muted">{c.category} · {c.platform}</p>
                 <p className="mt-2 text-sm leading-snug font-medium">{c.title}</p>
@@ -201,14 +183,14 @@ export default function AboutPage() {
       <section className="container-page pt-24 sm:pt-32">
         <div className="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-10">
           <div>
-            <h2 className="heading-2">En savoir plus.</h2>
-            <p className="mt-3 max-w-lg text-muted">Le storyboard de ma vidéo de présentation, ou une question directe à KOUD AI.</p>
+            <h2 className="heading-2">{t.moreTitle}</h2>
+            <p className="mt-3 max-w-lg text-muted">{t.moreLead}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <LinkButton href="/video" variant="ghost" size="lg" icon={<Play className="size-4" />}>
-              Vidéo
+            <LinkButton href={href(locale, "/video")} variant="ghost" size="lg" icon={<Play className="size-4" />}>
+              {t.video}
             </LinkButton>
-            <AskKoud question="Quel est le parcours de Jancy ?" />
+            <AskKoud question={t.askBackground} />
           </div>
         </div>
       </section>

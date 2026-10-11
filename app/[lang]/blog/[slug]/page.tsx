@@ -12,27 +12,33 @@ import { AskKoud } from "@/components/chat/AskKoud";
 import { getAllPosts, getPost } from "@/lib/blog";
 import { SITE } from "@/content/site";
 import { formatDate } from "@/lib/utils";
+import { href, LOCALES } from "@/lib/i18n/routing";
+import { alternates, resolveLocale } from "@/lib/i18n/server";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ lang: string; slug: string }> };
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+  return LOCALES.flatMap((lang) => getAllPosts().map((p) => ({ lang, slug: p.slug })));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await resolveLocale(params);
   const post = getPost((await params).slug);
   if (!post) return {};
   return {
     title: post.meta.title,
     description: post.meta.excerpt,
-    alternates: { canonical: `/blog/${post.meta.slug}` },
+    // The article itself is French: the French URL is canonical for both versions.
+    alternates: { ...alternates(locale, `/blog/${post.meta.slug}`), canonical: href("fr", `/blog/${post.meta.slug}`) },
     openGraph: { type: "article", publishedTime: post.meta.date, title: post.meta.title, description: post.meta.excerpt, authors: [SITE.person] },
   };
 }
 
 export default async function PostPage({ params }: Props) {
+  const { locale, t: dict } = await resolveLocale(params);
+  const t = dict.blog;
   const post = getPost((await params).slug);
   if (!post) notFound();
   const { meta, content, headings } = post;
@@ -50,6 +56,7 @@ export default async function PostPage({ params }: Props) {
     author: { "@type": "Person", name: SITE.person, url: SITE.url },
     keywords: meta.tags.join(", "),
     mainEntityOfPage: `${SITE.url}/blog/${meta.slug}`,
+    inLanguage: "fr",
   };
 
   return (
@@ -57,18 +64,18 @@ export default async function PostPage({ params }: Props) {
       <ReadingProgress />
       <article className="container-page pt-28 sm:pt-36">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <Link href="/blog" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-fg">
-          <ArrowLeft className="size-4" aria-hidden /> Tous les articles
+        <Link href={href(locale, "/blog")} className="inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-fg">
+          <ArrowLeft className="size-4" aria-hidden /> {t.back}
         </Link>
-        <header className="mt-6 max-w-4xl">
+        <header lang="fr" className="mt-6 max-w-4xl">
           <p className="meta text-accent-fg">{meta.category}</p>
           <h1 className="display-l mt-5">{meta.title}</h1>
           <p className="mt-6 max-w-[62ch] text-lg leading-relaxed text-muted">{meta.excerpt}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-y border-line py-4 font-mono text-xs text-muted">
             <span>{SITE.person}</span>
-            <time dateTime={meta.date}>{formatDate(meta.date)}</time>
-            <span>{meta.readingMinutes} min de lecture</span>
-            <ul className="flex flex-wrap gap-1.5" aria-label="Mots-clés">
+            <time dateTime={meta.date} lang={locale}>{formatDate(meta.date, locale)}</time>
+            <span lang={locale}>{t.minutes(meta.readingMinutes)}</span>
+            <ul className="flex flex-wrap gap-1.5" aria-label={t.keywords}>
               {meta.tags.map((t) => (
                 <li key={t} className="rounded-full border border-line px-2 py-0.5">
                   {t}
@@ -79,7 +86,8 @@ export default async function PostPage({ params }: Props) {
         </header>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,68ch)_1fr] lg:gap-16">
-          <div className="prose-koud min-w-0">
+          <div lang="fr" className="prose-koud min-w-0">
+            {t.languageNote && <p lang={locale} className="!mt-0 mb-8 rounded-[var(--radius)] border border-line px-4 py-3 text-sm text-muted">{t.languageNote}</p>}
             <MDXRemote
               source={content}
               options={{
@@ -92,34 +100,34 @@ export default async function PostPage({ params }: Props) {
           </div>
           <aside className="hidden lg:block">
             <div className="sticky top-28 space-y-8">
-              <Toc headings={headings} />
+              <Toc headings={headings} title={t.toc} />
               <div className="rounded-[var(--radius)] border border-line p-4">
-                <p className="text-sm text-muted">Une question sur cet article ?</p>
+                <p className="text-sm text-muted">{t.askQuestion}</p>
                 <div className="mt-3">
-                  <AskKoud question={`Résume l'article « ${meta.title} »`} label="Demander à KOUD AI" />
+                  <AskKoud question={t.askSummary(meta.title)} />
                 </div>
               </div>
             </div>
           </aside>
         </div>
 
-        <nav aria-label="Articles" className="mt-20 grid gap-4 border-t border-line pt-10 sm:grid-cols-2">
+        <nav aria-label={t.articlesNav} className="mt-20 grid gap-4 border-t border-line pt-10 sm:grid-cols-2">
           {older ? (
-            <Link href={`/blog/${older.slug}`} className="group rounded-[var(--radius-lg)] border border-line p-6 hover:border-line-strong">
+            <Link href={href(locale, `/blog/${older.slug}`)} className="group rounded-[var(--radius-lg)] border border-line p-6 hover:border-line-strong">
               <span className="meta flex items-center gap-2 text-muted">
-                <ArrowLeft className="size-3.5" aria-hidden /> Article précédent
+                <ArrowLeft className="size-3.5" aria-hidden /> {t.previous}
               </span>
-              <span className="mt-3 block font-semibold tracking-[-0.015em] group-hover:text-accent-fg">{older.title}</span>
+              <span lang="fr" className="mt-3 block font-semibold tracking-[-0.015em] group-hover:text-accent-fg">{older.title}</span>
             </Link>
           ) : (
             <span />
           )}
           {newer && (
-            <Link href={`/blog/${newer.slug}`} className="group rounded-[var(--radius-lg)] border border-line p-6 text-right hover:border-line-strong">
+            <Link href={href(locale, `/blog/${newer.slug}`)} className="group rounded-[var(--radius-lg)] border border-line p-6 text-right hover:border-line-strong">
               <span className="meta flex items-center justify-end gap-2 text-muted">
-                Article suivant <ArrowRight className="size-3.5" aria-hidden />
+                {t.next} <ArrowRight className="size-3.5" aria-hidden />
               </span>
-              <span className="mt-3 block font-semibold tracking-[-0.015em] group-hover:text-accent-fg">{newer.title}</span>
+              <span lang="fr" className="mt-3 block font-semibold tracking-[-0.015em] group-hover:text-accent-fg">{newer.title}</span>
             </Link>
           )}
         </nav>

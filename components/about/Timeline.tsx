@@ -4,22 +4,24 @@ import { useState } from "react";
 import { Briefcase, ChevronDown, GraduationCap } from "lucide-react";
 import type { Experience } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { useDict } from "@/lib/i18n/client";
 
 type Filter = "all" | "work" | "education";
 
 export function Timeline({ items }: { items: Experience[] }) {
+  const t = useDict().about;
   const [filter, setFilter] = useState<Filter>("all");
   const [open, setOpen] = useState<string | null>(items[0]?.title ?? null);
   const visible = items.filter((i) => filter === "all" || i.kind === filter);
 
   return (
     <div>
-      <div role="group" aria-label="Filtrer le parcours" className="inline-flex rounded-full border border-line bg-surface p-1">
+      <div role="group" aria-label={t.filterTimeline} className="inline-flex rounded-full border border-line bg-surface p-1">
         {(
           [
-            ["all", "Tout"],
-            ["work", "Expérience"],
-            ["education", "Formation"],
+            ["all", t.all],
+            ["work", t.work],
+            ["education", t.education],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -59,7 +61,7 @@ export function Timeline({ items }: { items: Experience[] }) {
                   <span>
                     <span className="flex items-center gap-2 text-xs text-muted">
                       <Icon className={cn("size-3.5", item.kind === "work" ? "text-accent-fg" : "text-muted")} aria-hidden />
-                      {item.kind === "work" ? "Expérience" : "Formation"}
+                      {item.kind === "work" ? t.work : t.education}
                     </span>
                     <span className="mt-2 block text-xl font-semibold tracking-[-0.02em] transition-colors group-hover:text-accent-fg sm:text-2xl">
                       {item.title}

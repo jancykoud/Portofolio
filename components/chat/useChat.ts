@@ -9,7 +9,14 @@ const STORAGE_KEY = "koud-ai:session";
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
-export function useChat() {
+type ChatErrors = {
+  rateLimited: (s: number) => string;
+  notConfigured: string;
+  unavailable: string;
+  empty: string;
+};
+
+export function useChat(errors: ChatErrors) {
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     if (typeof window === "undefined") return [];
     try {
@@ -67,10 +74,10 @@ export function useChat() {
           if (data.error === "not_configured") setStatus("unconfigured");
           throw new Error(
             data.error === "rate_limited"
-              ? `Trop de messages d'affilée. Réessayez dans ${data.retryAfter ?? 60} s.`
+              ? errors.rateLimited(data.retryAfter ?? 60)
               : data.error === "not_configured"
-                ? "KOUD AI n'est pas encore activé sur ce site."
-                : "KOUD AI est momentanément indisponible.",
+                ? errors.notConfigured
+                : errors.unavailable,
           );
         }
         const reader = res.body.getReader();
@@ -83,7 +90,7 @@ export function useChat() {
           const snapshot = acc;
           setMessages((m) => m.map((msg) => (msg.id === assistantMsg.id ? { ...msg, content: snapshot } : msg)));
         }
-        if (!acc.trim()) throw new Error("Réponse vide. Réessayez.");
+        if (!acc.trim()) throw new Error(errors.empty);
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         setError((e as Error).message);
@@ -93,7 +100,7 @@ export function useChat() {
         abortRef.current = null;
       }
     },
-    [messages, pending],
+    [messages, pending, errors],
   );
 
   const stop = () => abortRef.current?.abort();

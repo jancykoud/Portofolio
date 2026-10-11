@@ -1,4 +1,4 @@
-import { publishedProjects } from "@/lib/content";
+import { getProjects } from "@/lib/content";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/content/projects";
 import { EXPERIENCE, COURSES, SKILL_GROUPS, PRINCIPLES } from "@/content/experience";
 import { SERVICES } from "@/content/services";
@@ -33,7 +33,7 @@ function buildKnowledge(): string {
   for (const p of PRINCIPLES) lines.push(`- ${p.title} : ${p.body}`);
 
   lines.push(`\n# Projets publiés (page de chaque projet : /projets/<slug>)`);
-  for (const p of publishedProjects) {
+  for (const p of getProjects("fr")) {
     lines.push(`\n## ${p.name}${p.formerName ? ` (anciennement ${p.formerName})` : ""} — /projets/${p.slug}`);
     lines.push(`Accroche : ${p.tagline}`);
     lines.push(`Résumé : ${p.summary}`);
@@ -58,6 +58,7 @@ function buildKnowledge(): string {
 
   lines.push(`\n# Pages du site`);
   lines.push(`/ (accueil), /projets, /a-propos, /services, /blog, /lab (expérimentations interactives), /video, /contact.`);
+  lines.push(`Version anglaise : mêmes pages sous /en (ex. /en/projects/declic, /en/about, /en/services, /en/contact). Si l'utilisateur écrit en anglais, utilise les liens /en.`);
   lines.push(`Vidéo de présentation : ${INTRO_VIDEO ? "disponible sur /video" : "en préparation (storyboard visible sur /video), pas encore publiée"}.`);
 
   return lines.join("\n");

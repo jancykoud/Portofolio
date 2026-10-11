@@ -124,3 +124,19 @@ Netlify, avec le runtime Next.js (`@netlify/plugin-nextjs`, auto-détecté). Les
 ## 7. Redirections (préservation des URLs)
 
 `/work → /projets`, `/resume → /a-propos`, `/learning → /a-propos#formation`, `/fun → /a-propos` (308, `next.config.ts`).
+
+## 8. Internationalisation (FR / EN)
+
+| Élément | Choix |
+|---|---|
+| URL | Français sans préfixe (URL historiques conservées : `/projets`, `/a-propos`…), anglais sous `/en` avec slugs anglais (`/en/projects`, `/en/about`…) |
+| Arborescence | Toutes les pages vivent dans `app/[lang]/<dossier-français>` ; `[lang]` est le layout racine, il porte donc un vrai `<html lang>` |
+| Routage | `next.config.ts` : réécritures *afterFiles* (URL publique → arbre interne), redirections 308 des formes internes (`/fr/…`, `/en/projets`) vers les formes publiques. Table unique : `lib/i18n/routing.ts` |
+| 404 | `app/[lang]/[...rest]` appelle `notFound()`, si bien que la 404 s'affiche dans le bon layout (sans dépendre de `global-not-found`, encore expérimental) |
+| Textes d'interface | `lib/i18n/dictionaries.ts` : dictionnaire FR typé, l'anglais doit avoir exactement les mêmes clés (erreur de compilation sinon) |
+| Contenus | Source française dans `content/*.ts`, traductions dans `content/en/*.ts`, fusionnées par `lib/content.ts`. Faits, stacks et liens restent communs ; seule la formulation est traduite |
+| Blog | Les articles restent en français (`lang="fr"` sur le contenu, mention sur les pages anglaises, URL française canonique) |
+| SEO | `hreflang` fr / en / x-default sur chaque page, sitemap bilingue avec alternates, image Open Graph par langue |
+| KOUD AI | Interface traduite ; la base de connaissances reste en français (source validée) et l'assistant répond dans la langue de l'utilisateur, avec les liens `/en` en anglais |
+
+Ajouter une langue : ajouter le code dans `LOCALES`, une table de segments, un dictionnaire et des fichiers `content/<lang>/`.

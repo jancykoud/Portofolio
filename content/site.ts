@@ -21,14 +21,15 @@ export const SITE = {
   portrait: { src: "/images/profile.jpg", width: 1250, height: 1246, alt: "Portrait de Jancy Koud Banga" },
 } as const;
 
+/** Internal paths (French folders); labels come from the dictionary (nav.<key>). */
 export const NAV = [
-  { label: "Accueil", href: "/" },
-  { label: "Projets", href: "/projets" },
-  { label: "À propos", href: "/a-propos" },
-  { label: "Services", href: "/services" },
-  { label: "Blog", href: "/blog" },
-  { label: "Lab", href: "/lab" },
-  { label: "Contact", href: "/contact" },
+  { key: "home", href: "/" },
+  { key: "projects", href: "/projets" },
+  { key: "about", href: "/a-propos" },
+  { key: "services", href: "/services" },
+  { key: "blog", href: "/blog" },
+  { key: "lab", href: "/lab" },
+  { key: "contact", href: "/contact" },
 ] as const;
 
 /** Hero facts — each one is sourced (see docs/CONTENT_INVENTORY.md). */

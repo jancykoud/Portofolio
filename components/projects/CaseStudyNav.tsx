@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-export function CaseStudyNav({ sections }: { sections: { id: string; label: string }[] }) {
+export function CaseStudyNav({ sections, label }: { sections: { id: string; label: string }[]; label: string }) {
   const [active, setActive] = useState(sections[0]?.id);
   const navRef = useRef<HTMLElement>(null);
 
@@ -30,7 +30,7 @@ export function CaseStudyNav({ sections }: { sections: { id: string; label: stri
   }, [active]);
 
   return (
-    <nav ref={navRef} aria-label="Sections de l'étude de cas" className="glass sticky top-[84px] z-30 -mx-4 overflow-x-auto border-y border-line px-4 sm:mx-0 sm:rounded-full sm:border sm:px-2">
+    <nav ref={navRef} aria-label={label} className="glass sticky top-[84px] z-30 -mx-4 overflow-x-auto border-y border-line px-4 sm:mx-0 sm:rounded-full sm:border sm:px-2">
       <ol className="flex min-w-max gap-1">
         {sections.map((s) => (
           <li key={s.id}>

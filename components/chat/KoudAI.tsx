@@ -4,11 +4,12 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowUp, Maximize2, Minimize2, RotateCcw, Square, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { SUGGESTED_QUESTIONS } from "@/content/chat";
 import { RichText } from "./RichText";
 import { useChat } from "./useChat";
 import { cn } from "@/lib/utils";
 import { Orb } from "./shared";
+import { useDict, useLocale } from "@/lib/i18n/client";
+import { href } from "@/lib/i18n/routing";
 
 type PanelProps = {
   open: boolean;
@@ -20,9 +21,11 @@ type PanelProps = {
 
 /** Full assistant panel — loaded on demand by KoudAILauncher. */
 export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQuestionTaken, returnFocusTo }: PanelProps) {
+  const locale = useLocale();
+  const t = useDict().chat;
   const [expanded, setExpanded] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, status, pending, error, send, stop, reset, checkStatus } = useChat();
+  const { messages, status, pending, error, send, stop, reset, checkStatus } = useChat(t.errors);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const queued = useRef<string | null>(null);
@@ -52,8 +55,7 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
     setInput("");
   };
 
-  const statusLabel =
-    status === "ready" ? "En ligne" : status === "checking" ? "Vérification…" : status === "unconfigured" ? "Non activé" : "Hors ligne";
+  const statusLabel = t.status[status];
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -83,7 +85,7 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
             <div className="flex items-center gap-2.5">
               <Orb size={28} />
               <Dialog.Title className="font-semibold tracking-tight">KOUD AI</Dialog.Title>
-              <Dialog.Description className="sr-only">Assistant conversationnel du portfolio de Jancy Koud Banga.</Dialog.Description>
+              <Dialog.Description className="sr-only">{t.description}</Dialog.Description>
               <span
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[0.7rem]",
@@ -97,17 +99,17 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
             <div className="flex items-center">
               {messages.length > 0 && (
                 <button onClick={reset} className="inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-xs text-muted hover:bg-surface-2 hover:text-fg">
-                  <RotateCcw className="size-3.5" aria-hidden /> Réinitialiser
+                  <RotateCcw className="size-3.5" aria-hidden /> {t.reset}
                 </button>
               )}
               <button
                 onClick={() => setExpanded((v) => !v)}
                 className="hidden size-10 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg sm:inline-flex"
-                aria-label={expanded ? "Réduire la conversation" : "Agrandir en plein écran"}
+                aria-label={expanded ? t.collapse : t.expand}
               >
                 {expanded ? <Minimize2 className="size-4" aria-hidden /> : <Maximize2 className="size-4" aria-hidden />}
               </button>
-              <Dialog.Close className="inline-flex size-10 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg" aria-label="Fermer KOUD AI">
+              <Dialog.Close className="inline-flex size-10 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg" aria-label={t.close}>
                 <X className="size-4" aria-hidden />
               </Dialog.Close>
             </div>
@@ -118,26 +120,26 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center pt-6 text-center">
                   <Orb size={88} />
-                  <p className="mt-6 text-xl font-semibold tracking-tight">Bonjour, je suis KOUD AI</p>
+                  <p className="mt-6 text-xl font-semibold tracking-tight">{t.hello}</p>
                   <p className="mt-2 max-w-sm text-sm text-muted">
-                    Je réponds aux questions sur le parcours, les projets, les compétences et les disponibilités de Jancy — uniquement à partir des informations publiées sur ce site.
+                    {t.intro}
                   </p>
 
                   {status === "unconfigured" && (
                     <p role="status" className="mt-5 max-w-sm rounded-[var(--radius)] border border-line bg-surface p-3 text-sm">
-                      L'assistant n'est pas encore activé sur ce site (clé API non configurée). En attendant, vous pouvez{" "}
-                      <Link href="/contact" className="text-accent-fg underline" onClick={() => setOpen(false)}>
-                        écrire directement
+                      {t.notConfigured}{" "}
+                      <Link href={href(locale, "/contact")} className="text-accent-fg underline" onClick={() => setOpen(false)}>
+                        {t.writeDirectly}
                       </Link>
                       .
                     </p>
                   )}
                   {status === "offline" && (
-                    <p role="status" className="mt-5 text-sm text-muted">Connexion impossible. Vérifiez votre réseau.</p>
+                    <p role="status" className="mt-5 text-sm text-muted">{t.offline}</p>
                   )}
 
                   <ul className={cn("mt-6 grid w-full gap-2", expanded && "sm:grid-cols-2")}>
-                    {SUGGESTED_QUESTIONS.map((q) => (
+                    {t.suggestions.map((q) => (
                       <li key={q}>
                         <button
                           onClick={() => submit(q)}
@@ -161,12 +163,12 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
                           m.role === "user" ? "rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-accent-ink" : "pt-0.5",
                         )}
                       >
-                        <span className="sr-only">{m.role === "user" ? "Vous : " : "KOUD AI : "}</span>
+                        <span className="sr-only">{m.role === "user" ? t.you : "KOUD AI : "}</span>
                         {m.role === "assistant" ? (
                           m.content ? (
                             <RichText text={m.content} />
                           ) : (
-                            <span className="inline-flex gap-1 py-2" aria-label="KOUD AI rédige">
+                            <span className="inline-flex gap-1 py-2" aria-label={t.typing}>
                               {[0, 1, 2].map((i) => (
                                 <span key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 120}ms` }} />
                               ))}
@@ -197,7 +199,7 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
           >
             <div className={cn("mx-auto flex items-end gap-2 rounded-[22px] border border-line-strong bg-surface p-1.5 pl-4 focus-within:border-fg", expanded && "max-w-2xl")}>
               <label htmlFor="koud-ai-input" className="sr-only">
-                Votre question
+                {t.inputLabel}
               </label>
               <textarea
                 id="koud-ai-input"
@@ -213,11 +215,11 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
                     submit(input);
                   }
                 }}
-                placeholder={status === "ready" ? "Posez votre question…" : "Assistant indisponible"}
+                placeholder={status === "ready" ? t.placeholder : t.unavailable}
                 className="max-h-32 min-h-10 flex-1 resize-none bg-transparent py-2 text-[0.95rem] outline-none placeholder:text-muted disabled:cursor-not-allowed"
               />
               {pending ? (
-                <button type="button" onClick={stop} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-fg text-bg" aria-label="Arrêter la réponse">
+                <button type="button" onClick={stop} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-fg text-bg" aria-label={t.stop}>
                   <Square className="size-3.5" aria-hidden />
                 </button>
               ) : (
@@ -225,14 +227,14 @@ export default function KoudAIPanel({ open, onOpenChange: setOpen, question, onQ
                   type="submit"
                   disabled={!input.trim() || status !== "ready"}
                   className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink disabled:opacity-40"
-                  aria-label="Envoyer"
+                  aria-label={t.send}
                 >
                   <ArrowUp className="size-4" aria-hidden />
                 </button>
               )}
             </div>
             <p className="mt-2 text-center text-[0.7rem] text-muted">
-              KOUD AI peut se tromper. Conversations non enregistrées sur le serveur ; historique effacé à la fermeture de l'onglet.
+              {t.disclaimer}
             </p>
           </form>
         </Dialog.Content>

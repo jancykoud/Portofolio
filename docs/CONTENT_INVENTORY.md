@@ -70,7 +70,7 @@ Rédigés à partir des projets réels. **Aucun tarif, délai ni résultat promi
 
 ## 7. Interface
 
-Le sélecteur de langue « FR » de la maquette n'est **pas** affiché : le site est entièrement en français et aucun contenu anglais validé n'existe. Un bouton de langue inactif aurait enfreint la règle « aucun bouton inactif ». Prévoir une passe de traduction (contenus `content/*.ts` + MDX) avant d'ajouter `next-intl`.
+Version anglaise **en place** (`/en`) avec un sélecteur FR/EN fonctionnel. Les traductions (`content/en/`) sont des traductions fidèles des contenus validés, faites par Claude : **à relire par Jancy**, en particulier les intitulés de diplômes et de postes. Les articles de blog restent en français.
 
 ## 8. Retiré (avec justification)
 

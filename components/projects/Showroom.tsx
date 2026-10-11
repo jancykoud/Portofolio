@@ -6,6 +6,7 @@ import type { Project, ProjectCategory } from "@/content/types";
 import { ProjectCard } from "./ProjectCard";
 import { useRootFlags } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
+import { useDict, useLocale } from "@/lib/i18n/client";
 
 type Filter = { id: ProjectCategory; label: string; count: number };
 
@@ -22,6 +23,8 @@ const readFilterParam = () => new URLSearchParams(window.location.search).get("f
 
 export function Showroom({ projects, filters }: { projects: Project[]; filters: Filter[] }) {
   const { reducedMotion } = useRootFlags();
+  const locale = useLocale();
+  const t = useDict().projects;
   // The URL is the source of truth for the filter (shareable: /projets?filtre=ai-data).
   const param = useSyncExternalStore(subscribeUrl, readFilterParam, () => null);
   const active: ProjectCategory | "all" = param && filters.some((f) => f.id === param) ? (param as ProjectCategory) : "all";
@@ -38,8 +41,8 @@ export function Showroom({ projects, filters }: { projects: Project[]; filters: 
 
   return (
     <>
-      <div role="group" aria-label="Filtrer les projets" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
-        {[{ id: "all" as const, label: "Tous", count: projects.length }, ...filters].map((f) => (
+      <div role="group" aria-label={t.filterLabel} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
+        {[{ id: "all" as const, label: t.all, count: projects.length }, ...filters].map((f) => (
           <button
             key={f.id}
             type="button"
@@ -57,7 +60,7 @@ export function Showroom({ projects, filters }: { projects: Project[]; filters: 
       </div>
 
       <p className="sr-only" aria-live="polite">
-        {visible.length} projet{visible.length > 1 ? "s" : ""} affiché{visible.length > 1 ? "s" : ""}
+        {t.shown(visible.length)}
       </p>
 
       <motion.ul layout={!reducedMotion} className="mt-10 grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
@@ -74,7 +77,7 @@ export function Showroom({ projects, filters }: { projects: Project[]; filters: 
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className={cn(large && "md:col-span-2")}
               >
-                <ProjectCard project={p} index={i} large={large} headingLevel={2} />
+                <ProjectCard project={p} index={i} large={large} headingLevel={2} locale={locale} />
               </motion.li>
             );
           })}

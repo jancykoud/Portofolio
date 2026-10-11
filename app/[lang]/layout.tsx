@@ -1,42 +1,46 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "../globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { KoudAILauncher } from "@/components/chat/KoudAILauncher";
 import { HydrationMark } from "@/components/layout/HydrationMark";
 import { SITE } from "@/content/site";
 import { themeBootstrapScript } from "@/lib/theme";
+import { LOCALES } from "@/lib/i18n/routing";
+import { alternates, resolveLocale, type LangParams } from "@/lib/i18n/server";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff2",
+  src: "../fonts/GeistVF.woff2",
   variable: "--font-geist-sans",
   weight: "100 900",
   display: "swap",
 });
 
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff2",
+  src: "../fonts/GeistMonoVF.woff2",
   variable: "--font-geist-mono",
   weight: "100 900",
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} — ${SITE.person}, Software Engineer`, template: `%s — ${SITE.name}` },
-  description: SITE.description,
-  authors: [{ name: SITE.person, url: SITE.url }],
-  creator: SITE.person,
-  openGraph: {
-    type: "website",
-    locale: "fr_FR",
-    siteName: `${SITE.name} — ${SITE.person}`,
-    url: SITE.url,
-  },
-  twitter: { card: "summary_large_image" },
-  alternates: { canonical: "/" },
-};
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const { locale, t } = await resolveLocale(params);
+  return {
+    metadataBase: new URL(SITE.url),
+    title: { default: t.meta.title, template: `%s — ${SITE.name}` },
+    description: t.meta.description,
+    authors: [{ name: SITE.person, url: SITE.url }],
+    creator: SITE.person,
+    openGraph: { type: "website", locale: t.meta.ogLocale, siteName: `${SITE.name} — ${SITE.person}`, url: SITE.url },
+    twitter: { card: "summary_large_image" },
+    alternates: alternates(locale, "/"),
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -46,9 +50,10 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children, params }: LangParams & { children: React.ReactNode }) {
+  const { locale, t } = await resolveLocale(params);
   return (
-    <html lang="fr" data-scroll-behavior="smooth" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang={locale} data-scroll-behavior="smooth" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
       </head>
@@ -57,13 +62,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="#contenu"
           className="sr-only z-[100] rounded-full bg-accent px-4 py-2 text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
-          Aller au contenu
+          {t.nav.skip}
         </a>
         <SiteHeader />
         <main id="contenu" tabIndex={-1} className="outline-none">
           {children}
         </main>
-        <SiteFooter />
+        <SiteFooter locale={locale} />
         <KoudAILauncher />
         <HydrationMark />
       </body>

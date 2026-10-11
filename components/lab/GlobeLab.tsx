@@ -4,11 +4,13 @@ import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import { StaticGlobe } from "@/components/home/HeroVisual";
 import { useRootFlags } from "@/lib/hooks";
+import { useDict } from "@/lib/i18n/client";
 
 const HeroScene = dynamic(() => import("@/components/home/HeroScene"), { ssr: false });
 
 export function GlobeLab() {
   const { lite, reducedMotion } = useRootFlags();
+  const t = useDict().lab;
   const [count, setCount] = useState(2600);
   const [unsupported, setUnsupported] = useState(false);
   const onUnsupported = useCallback(() => setUnsupported(true), []);
@@ -24,7 +26,7 @@ export function GlobeLab() {
         {webgl ? (
           <>
             <label htmlFor="density" className="text-sm font-medium">
-              Densité : <span className="font-mono">{count.toLocaleString("fr-FR")}</span> points
+              {t.density} <span className="font-mono">{count.toLocaleString()}</span> {t.points}
             </label>
             <input
               id="density"
@@ -39,16 +41,15 @@ export function GlobeLab() {
           </>
         ) : (
           <p className="rounded-[var(--radius)] border border-line p-4 text-sm text-muted">
-            {unsupported
-              ? "Version statique affichée : votre navigateur n'a pas d'accélération matérielle pour WebGL, et le rendu logiciel serait trop coûteux."
-              : "Version statique affichée : mode performance allégé ou animations réduites actifs. Modifiez-les dans le Theme Studio pour la version WebGL."}
+            {unsupported ? t.staticNoGpu : t.staticPrefs}
           </p>
         )}
         <ul className="mt-6 space-y-3 text-sm leading-relaxed text-muted">
-          <li><strong className="font-medium text-fg">Distribution de Fibonacci</strong> — chaque point est placé sur la sphère par l'angle d'or : couverture homogène, sans pôles surchargés.</li>
-          <li><strong className="font-medium text-fg">Shader sur mesure</strong> — taille, opacité selon la profondeur et pulsation des points « actifs » calculées sur le GPU.</li>
-          <li><strong className="font-medium text-fg">Couleurs tokenisées</strong> — la scène lit les variables CSS du thème et se met à jour à chaque changement.</li>
-          <li><strong className="font-medium text-fg">Sobriété</strong> — chargée à la demande, mise en pause hors écran et onglet masqué, désactivée en mode allégé.</li>
+          {t.notes.map(([title, body]) => (
+            <li key={title}>
+              <strong className="font-medium text-fg">{title}</strong> — {body}
+            </li>
+          ))}
         </ul>
       </div>
     </div>

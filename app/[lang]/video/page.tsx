@@ -4,36 +4,41 @@ import { VideoPlayer } from "@/components/video/VideoPlayer";
 import { LinkButton } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
-import { INTRO_VIDEO, STORYBOARD } from "@/content/video";
+import { INTRO_VIDEO } from "@/content/video";
+import { getStoryboard } from "@/lib/content";
+import { href } from "@/lib/i18n/routing";
+import { alternates, resolveLocale, type LangParams } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Vidéo de présentation",
-  description: "La vidéo de présentation de Jancy Koud Banga : parcours, approche de l'ingénierie, projets et vision — storyboard et lecteur.",
-  alternates: { canonical: "/video" },
-};
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const { locale, t } = await resolveLocale(params);
+  return { title: t.video.metaTitle, description: t.video.metaDescription, alternates: alternates(locale, "/video") };
+}
 
-export default function VideoPage() {
+export default async function VideoPage({ params }: LangParams) {
+  const { locale, t: dict } = await resolveLocale(params);
+  const t = dict.video;
+  const storyboard = getStoryboard(locale);
   return (
     <div className="container-page pt-32 sm:pt-40">
       <SectionHeading
         as="h1"
-        eyebrow="À propos · Vidéo"
-        title="Ma vidéo de présentation."
-        lead="Soixante secondes pour comprendre qui je suis, comment je travaille et ce que je construis."
+        eyebrow={t.eyebrow}
+        title={t.title}
+        lead={t.lead}
       />
 
       <div className="mt-12">
-        <VideoPlayer source={INTRO_VIDEO} chapters={STORYBOARD} />
+        <VideoPlayer source={INTRO_VIDEO} chapters={storyboard} />
       </div>
 
       <section className="mt-24" aria-labelledby="storyboard-title">
         <SectionHeading
-          eyebrow="Storyboard"
-          title={<span id="storyboard-title">Structure éditoriale — 60 secondes.</span>}
-          lead="Plans réels uniquement : aucune image générée ne me représente, et les captures de projets seront celles autorisées."
+          eyebrow={t.storyboardEyebrow}
+          title={<span id="storyboard-title">{t.storyboardTitle}</span>}
+          lead={t.storyboardLead}
         />
         <ol className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {STORYBOARD.map((s, i) => (
+          {storyboard.map((s, i) => (
             <Reveal as="li" key={s.time} delay={i * 50} className="flex flex-col rounded-[var(--radius-lg)] border border-line bg-surface p-6">
               <div className="flex items-baseline justify-between">
                 <span className="text-3xl font-semibold tracking-[-0.03em]">{String(i + 1).padStart(2, "0")}</span>
@@ -43,11 +48,11 @@ export default function VideoPage() {
               </div>
               <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                <span className="meta mr-2 text-[0.65rem] text-accent-fg">Image</span>
+                <span className="meta mr-2 text-[0.65rem] text-accent-fg">{t.image}</span>
                 {s.shot}
               </p>
               <p className="mt-3 text-sm leading-relaxed">
-                <span className="meta mr-2 text-[0.65rem] text-accent-fg">Voix</span>
+                <span className="meta mr-2 text-[0.65rem] text-accent-fg">{t.voice}</span>
                 {s.voice}
               </p>
             </Reveal>
@@ -56,11 +61,11 @@ export default function VideoPage() {
       </section>
 
       <div className="mt-16 flex flex-wrap gap-3">
-        <LinkButton href="/a-propos" variant="ghost" icon={<ArrowRight className="size-4" />}>
-          Lire mon parcours
+        <LinkButton href={href(locale, "/a-propos")} variant="ghost" icon={<ArrowRight className="size-4" />}>
+          {t.readBackground}
         </LinkButton>
-        <LinkButton href="/contact" icon={<ArrowRight className="size-4" />}>
-          Me contacter
+        <LinkButton href={href(locale, "/contact")} icon={<ArrowRight className="size-4" />}>
+          {dict.nav.contactCta}
         </LinkButton>
       </div>
     </div>

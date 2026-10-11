@@ -1,11 +1,11 @@
 import type { Heading } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
-export function Toc({ headings }: { headings: Heading[] }) {
+export function Toc({ headings, title }: { headings: Heading[]; title: string }) {
   if (!headings.length) return null;
   return (
-    <nav aria-label="Sommaire" className="text-sm">
-      <p className="meta text-muted">Sommaire</p>
+    <nav aria-label={title} className="text-sm">
+      <p className="meta text-muted">{title}</p>
       <ol className="mt-4 space-y-1 border-l border-line">
         {headings.map((h) => (
           <li key={h.id}>
