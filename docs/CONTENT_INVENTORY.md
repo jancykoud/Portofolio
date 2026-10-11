@@ -81,3 +81,10 @@ Version anglaise **en place** (`/en`) avec un sélecteur FR/EN fonctionnel. Les 
 | Galerie Détente (SVG génériques) | Images non représentatives |
 | Pourcentages NetAcad | Barres de progression interdites |
 | `stage.pdf` | Doublon exact du CV fullstack (fichier conservé, non lié) |
+
+## 9. Captures ajoutées (11/10/2026)
+
+Captures réelles prises sur les sites publics, sans compte et sans retouche, au format WebP dans `public/projects/<slug>/` :
+- **Wmbia** (wmbia.com) : accueil/connexion desktop + mobile. L'assistant connecté reste à capturer.
+- **Orient'Ex** (orient-ex.org) : accueil, « Pourquoi Orient'Ex », « Comment ça marche », programmes + mobile. Volontairement exclus : la page des mentors (noms et profils de personnes réelles) et le bandeau des logos partenaires.
+- **Akili** (démo) : connexion, inscription, création d'établissement, desktop + mobile. Les tableaux de bord (compte de démo) restent à capturer avec l'accord de Jancy.

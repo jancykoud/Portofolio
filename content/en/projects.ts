@@ -80,6 +80,10 @@ export const PROJECTS_EN: Record<string, ProjectTranslation> = {
     ],
     learnings: ["Vector search impresses from the first POC; making it robust in production takes far longer."],
     facts: ["measured p95 latency (Qdrant, 10k vectors)"],
+    screens: [
+      { alt: "WMBai home page: assistant overview and sign-in form", caption: "Home and sign-in — the product is live under the name WMBai. The assistant itself requires an account." },
+      { alt: "WMBai sign-in screen on mobile", caption: "Sign-in on mobile." },
+    ],
   },
   akili: {
     tagline: "Multi-school management designed for Africa.",
@@ -98,12 +102,26 @@ export const PROJECTS_EN: Record<string, ProjectTranslation> = {
       "Turborepo monorepo sharing types and business logic between front end and API.",
     ],
     facts: ["user roles"],
+    screens: [
+      { alt: "Akili sign-in screen: “Intelligence serving African education”", caption: "Sign-in — email or student code, bilingual FR/EN interface." },
+      { alt: "Akili sign-up, step 1 of 4: choosing a student, parent or teacher profile", caption: "4-step sign-up with one profile per role (student, parent, teacher)." },
+      { alt: "School creation wizard: access-code step", caption: "Creating a school: 5-step wizard (access code, school, levels, subjects, principal)." },
+      { alt: "Akili sign-in screen on mobile", caption: "Sign-in on mobile (PWA)." },
+      { alt: "Akili school creation on mobile", caption: "School creation on mobile." },
+    ],
   },
   "orient-ex": {
     tagline: "Volunteer mentoring for students and young professionals.",
     summary: "A platform that connects young people with volunteer mentors to support their studies, careers and personal development.",
     role: "Web development",
     solution: ["Modular Nuxt.js architecture with a MySQL database.", "Docker containerisation and a GitLab CI/CD pipeline for reproducible deployments."],
+    screens: [
+      { alt: "Orient'Ex home page: “Find the perfect mentor for your success”", caption: "Home: value proposition and a mentor profile preview." },
+      { alt: "“Why choose Orient'Ex” section with three arguments", caption: "Key arguments: expert mentors, personalised learning, flexibility." },
+      { alt: "“How it works” page: a three-step process", caption: "3-step journey: profile, choice of mentor, support." },
+      { alt: "“Our programmes” section listing six support programmes", caption: "Programmes: CV, study methods, guidance, school results, studying abroad, employability." },
+      { alt: "Orient'Ex home page on mobile", caption: "Home on mobile." },
+    ],
   },
   "tash-cash-agency": {
     tagline: "A trilingual website for a pan-African agency based in Yaoundé.",
