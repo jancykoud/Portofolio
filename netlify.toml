@@ -4,3 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Declared explicitly: on CI the Next.js runtime was not applied automatically
+# (deploy with 0 functions and no routing rules → every URL answered 404).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
