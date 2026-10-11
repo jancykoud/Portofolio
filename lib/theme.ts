@@ -35,8 +35,12 @@ export const THEME_SWATCHES: Record<ResolvedTheme, [string, string, string]> = {
 /**
  * Runs inline in <head> before first paint, so the right theme is applied
  * during SSR hydration with no flash. Keep it dependency-free and ES5.
+ * It also removes comments / whitespace text nodes the host may inject into
+ * <head> (Netlify adds a "hosted on Netlify" comment on production domains),
+ * which would otherwise break React hydration (error #418).
  */
-export const themeBootstrapScript = `(function(){var d=document.documentElement,p={};d.classList.add('js');try{p=JSON.parse(localStorage.getItem('${PREFS_KEY}')||'{}')||{}}catch(e){}
+export const themeBootstrapScript = `(function(){var d=document.documentElement,p={};d.classList.add('js');
+for(var n=document.head&&document.head.firstChild;n;){var x=n.nextSibling;if(n.nodeType===8||(n.nodeType===3&&!/\\S/.test(n.nodeValue)))n.parentNode.removeChild(n);n=x}try{p=JSON.parse(localStorage.getItem('${PREFS_KEY}')||'{}')||{}}catch(e){}
 var mm=function(q){return window.matchMedia&&window.matchMedia(q).matches};
 var t=p.theme||'system';if(t==='system'){t=mm('(prefers-color-scheme: light)')?'daylight':'obsidian'}
 if(['obsidian','midnight','aurora','daylight','ivory'].indexOf(t)<0){t='obsidian'}
