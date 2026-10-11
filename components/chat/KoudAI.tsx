@@ -1,0 +1,270 @@
+"use client";
+
+import * as Dialog from "@radix-ui/react-dialog";
+import { ArrowUp, Maximize2, Minimize2, RotateCcw, Square, X } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { SUGGESTED_QUESTIONS } from "@/content/chat";
+import { RichText } from "./RichText";
+import { useChat } from "./useChat";
+import { cn } from "@/lib/utils";
+
+export function Orb({ size = 56, className }: { size?: number; className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={cn("relative inline-flex shrink-0 items-center justify-center rounded-full", className)}
+      style={{
+        width: size,
+        height: size,
+        background:
+          "radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--atmo-2) 70%, white) 0%, var(--atmo-1) 45%, color-mix(in srgb, var(--atmo-1) 35%, black) 100%)",
+        boxShadow: "0 0 0 1px color-mix(in srgb, var(--atmo-1) 50%, transparent), 0 0 40px -6px var(--atmo-1)",
+        animation: "orb-breathe 5s ease-in-out infinite",
+      }}
+    >
+      <span className="flex gap-[18%]" style={{ width: "40%" }}>
+        <span className="aspect-[1/1.4] flex-1 rounded-full bg-white/90" />
+        <span className="aspect-[1/1.4] flex-1 rounded-full bg-white/90" />
+      </span>
+    </span>
+  );
+}
+
+/** Other components can open the assistant with an optional question. */
+export function openKoudAI(question?: string) {
+  window.dispatchEvent(new CustomEvent("koud-ai:open", { detail: { question } }));
+}
+
+export function KoudAI() {
+  const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [input, setInput] = useState("");
+  const { messages, status, pending, error, send, stop, reset, checkStatus } = useChat();
+  const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const queued = useRef<string | null>(null);
+
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const q = (e as CustomEvent<{ question?: string }>).detail?.question;
+      if (q) queued.current = q;
+      setOpen(true);
+    };
+    window.addEventListener("koud-ai:open", onOpen);
+    return () => window.removeEventListener("koud-ai:open", onOpen);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    if (status === "checking") void checkStatus();
+    if (status === "ready" && queued.current) {
+      void send(queued.current);
+      queued.current = null;
+    }
+  }, [open, status, checkStatus, send]);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
+  const submit = (text: string) => {
+    if (!text.trim() || status !== "ready") return;
+    void send(text);
+    setInput("");
+  };
+
+  const statusLabel =
+    status === "ready" ? "En ligne" : status === "checking" ? "Vérification…" : status === "unconfigured" ? "Non activé" : "Hors ligne";
+
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger
+        className={cn(
+          "glass fixed right-4 bottom-4 z-40 inline-flex h-14 items-center gap-3 rounded-full border border-line-strong p-1.5 sm:pr-5 shadow-[var(--shadow)] transition-transform hover:-translate-y-0.5 sm:right-6 sm:bottom-6",
+          open && "pointer-events-none opacity-0",
+        )}
+        aria-label="Ouvrir KOUD AI, l'assistant du portfolio"
+      >
+        <Orb size={44} />
+        <span className="hidden text-sm font-medium sm:inline">KOUD AI</span>
+      </Dialog.Trigger>
+
+      <Dialog.Portal>
+        <Dialog.Overlay className={cn("fixed inset-0 z-[60] bg-black/50", !expanded && "sm:bg-black/20")} />
+        <Dialog.Content
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            inputRef.current?.focus();
+          }}
+          className={cn(
+            "fixed z-[70] flex flex-col overflow-hidden border-line-strong bg-bg shadow-[var(--shadow)]",
+            "inset-0 sm:border",
+            expanded
+              ? "sm:inset-6 sm:rounded-[var(--radius-lg)]"
+              : "sm:inset-auto sm:right-6 sm:bottom-6 sm:h-[min(680px,calc(100dvh-3rem))] sm:w-[420px] sm:rounded-[var(--radius-lg)]",
+          )}
+        >
+          <div className="atmosphere pointer-events-none absolute inset-0 opacity-70" aria-hidden />
+
+          <div className="relative flex items-center justify-between gap-2 border-b border-line px-4 py-3">
+            <div className="flex items-center gap-2.5">
+              <Orb size={28} />
+              <Dialog.Title className="font-semibold tracking-tight">KOUD AI</Dialog.Title>
+              <Dialog.Description className="sr-only">Assistant conversationnel du portfolio de Jancy Koud Banga.</Dialog.Description>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[0.7rem]",
+                  status === "ready" ? "border-line-strong text-success" : "border-line text-muted",
+                )}
+              >
+                <span className={cn("size-1.5 rounded-full", status === "ready" ? "bg-success" : "bg-muted")} aria-hidden />
+                {statusLabel}
+              </span>
+            </div>
+            <div className="flex items-center">
+              {messages.length > 0 && (
+                <button onClick={reset} className="inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-xs text-muted hover:bg-surface-2 hover:text-fg">
+                  <RotateCcw className="size-3.5" aria-hidden /> Réinitialiser
+                </button>
+              )}
+              <button
+                onClick={() => setExpanded((v) => !v)}
+                className="hidden size-10 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg sm:inline-flex"
+                aria-label={expanded ? "Réduire la conversation" : "Agrandir en plein écran"}
+              >
+                {expanded ? <Minimize2 className="size-4" aria-hidden /> : <Maximize2 className="size-4" aria-hidden />}
+              </button>
+              <Dialog.Close className="inline-flex size-10 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg" aria-label="Fermer KOUD AI">
+                <X className="size-4" aria-hidden />
+              </Dialog.Close>
+            </div>
+          </div>
+
+          <div ref={listRef} className="relative flex-1 overflow-y-auto px-4 py-5" aria-live="polite" aria-busy={pending}>
+            <div className={cn("mx-auto", expanded && "max-w-2xl")}>
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center pt-6 text-center">
+                  <Orb size={88} />
+                  <p className="mt-6 text-xl font-semibold tracking-tight">Bonjour, je suis KOUD AI</p>
+                  <p className="mt-2 max-w-sm text-sm text-muted">
+                    Je réponds aux questions sur le parcours, les projets, les compétences et les disponibilités de Jancy — uniquement à partir des informations publiées sur ce site.
+                  </p>
+
+                  {status === "unconfigured" && (
+                    <p role="status" className="mt-5 max-w-sm rounded-[var(--radius)] border border-line bg-surface p-3 text-sm">
+                      L'assistant n'est pas encore activé sur ce site (clé API non configurée). En attendant, vous pouvez{" "}
+                      <Link href="/contact" className="text-accent-fg underline" onClick={() => setOpen(false)}>
+                        écrire directement
+                      </Link>
+                      .
+                    </p>
+                  )}
+                  {status === "offline" && (
+                    <p role="status" className="mt-5 text-sm text-muted">Connexion impossible. Vérifiez votre réseau.</p>
+                  )}
+
+                  <ul className={cn("mt-6 grid w-full gap-2", expanded && "sm:grid-cols-2")}>
+                    {SUGGESTED_QUESTIONS.map((q) => (
+                      <li key={q}>
+                        <button
+                          onClick={() => submit(q)}
+                          disabled={status !== "ready"}
+                          className="w-full rounded-full border border-line-strong bg-surface/60 px-4 py-2.5 text-left text-sm transition-colors hover:border-fg disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {q}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <ol className="space-y-5">
+                  {messages.map((m) => (
+                    <li key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start gap-2.5")}>
+                      {m.role === "assistant" && <Orb size={24} className="mt-0.5" />}
+                      <div
+                        className={cn(
+                          "max-w-[85%] text-[0.94rem] leading-relaxed",
+                          m.role === "user" ? "rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-accent-ink" : "pt-0.5",
+                        )}
+                      >
+                        <span className="sr-only">{m.role === "user" ? "Vous : " : "KOUD AI : "}</span>
+                        {m.role === "assistant" ? (
+                          m.content ? (
+                            <RichText text={m.content} />
+                          ) : (
+                            <span className="inline-flex gap-1 py-2" aria-label="KOUD AI rédige">
+                              {[0, 1, 2].map((i) => (
+                                <span key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 120}ms` }} />
+                              ))}
+                            </span>
+                          )
+                        ) : (
+                          m.content
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {error && (
+                <p role="alert" className="mt-4 rounded-[var(--radius)] border border-line px-3 py-2 text-sm text-danger">
+                  {error}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <form
+            className="relative border-t border-line p-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              submit(input);
+            }}
+          >
+            <div className={cn("mx-auto flex items-end gap-2 rounded-[22px] border border-line-strong bg-surface p-1.5 pl-4 focus-within:border-fg", expanded && "max-w-2xl")}>
+              <label htmlFor="koud-ai-input" className="sr-only">
+                Votre question
+              </label>
+              <textarea
+                id="koud-ai-input"
+                ref={inputRef}
+                rows={1}
+                maxLength={1200}
+                value={input}
+                disabled={status !== "ready"}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    submit(input);
+                  }
+                }}
+                placeholder={status === "ready" ? "Posez votre question…" : "Assistant indisponible"}
+                className="max-h-32 min-h-10 flex-1 resize-none bg-transparent py-2 text-[0.95rem] outline-none placeholder:text-muted disabled:cursor-not-allowed"
+              />
+              {pending ? (
+                <button type="button" onClick={stop} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-fg text-bg" aria-label="Arrêter la réponse">
+                  <Square className="size-3.5" aria-hidden />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={!input.trim() || status !== "ready"}
+                  className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink disabled:opacity-40"
+                  aria-label="Envoyer"
+                >
+                  <ArrowUp className="size-4" aria-hidden />
+                </button>
+              )}
+            </div>
+            <p className="mt-2 text-center text-[0.7rem] text-muted">
+              KOUD AI peut se tromper. Conversations non enregistrées sur le serveur ; historique effacé à la fermeture de l'onglet.
+            </p>
+          </form>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}

@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ───────────────────────────────────────────── */
+:root {
+  --bg-cream: #f2f0eb;
+  --bg-dark: #0a0a0a;
+  --text-dark: #0a0a0a;
+  --accent: #6d28d9;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-thin: rgba(0, 0, 0, 0.12);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    font-family: var(--font-inter), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ── Marquee ─────────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 20s linear infinite;
+  will-change: transform;
+}
+
+/* ── Blog MDX ────────────────────────────────────────────────── */
+.mdx-body h1,
+.mdx-body h2,
+.mdx-body h3 {
+  font-family: var(--font-syne);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.mdx-body h2 { font-size: 1.5rem; }
+.mdx-body h3 { font-size: 1.2rem; }
+.mdx-body p {
+  font-family: var(--font-inter);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.25rem;
+}
+.mdx-body a {
+  color: #a78bfa;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.mdx-body ul,
+.mdx-body ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+.mdx-body li { margin-bottom: 0.4rem; }
+.mdx-body blockquote {
+  border-left: 3px solid #6d28d9;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  background: rgba(109, 40, 217, 0.1);
+  border-radius: 0 8px 8px 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+.mdx-body code:not(pre code) {
+  background: rgba(109, 40, 217, 0.15);
+  color: #a78bfa;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+.mdx-body pre {
+  background: #111111;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.mdx-body pre code {
+  font-family: 'JetBrains Mono', monospace;
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+.mdx-body hr {
+  border: none;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+  margin: 2.5rem 0;
+}
+
+/* ── Blog card hover ─────────────────────────────────────────── */
+.blog-card {
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.group:hover .blog-card {
+  border-color: #6d28d9 !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(109, 40, 217, 0.15);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg-cream); }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
