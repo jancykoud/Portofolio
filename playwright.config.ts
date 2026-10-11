@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.PORT ?? 3100);
+// BASE_URL=https://… runs the suite against a deployed preview instead of a local server.
+const BASE_URL = process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "tests",
@@ -9,7 +11,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: BASE_URL ?? `http://localhost:${PORT}`,
     trace: "retain-on-failure",
   },
   projects: [
@@ -22,7 +24,9 @@ export default defineConfig({
   // Tests run against the production build. Keys are deliberately absent:
   // KOUD AI and the contact form are exercised in their "not configured" state,
   // and the streaming UI with a mocked endpoint — no paid API call is ever made.
-  webServer: {
+  webServer: BASE_URL
+    ? undefined
+    : {
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: true,

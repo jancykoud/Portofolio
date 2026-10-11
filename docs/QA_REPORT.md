@@ -66,3 +66,42 @@ CLS ≈ 0 partout ; TBT 0–60 ms. **Avertissement** : pendant une partie de la 
 - **Envoi réel via Resend** (pas de clé).
 - **Déploiement Netlify** (runtime Next 15, fonctions) : non effectué, en attente de validation.
 - Navigateurs autres que Chromium (Safari, Firefox) : non testés.
+
+---
+
+## 7. Mise à jour — préversion Netlify (11/10/2026, après passage à Next 16.4)
+
+Préversion : https://koud-v2--koud-portfolio.netlify.app (branche `redesign/koud-v2`, *draft deploy* ; la production n'est pas touchée).
+
+### Lighthouse 12.8 sur la préversion (réseau réel, CDN Netlify)
+
+| Page | Mobile (perf / a11y / BP / SEO) | LCP mobile | Desktop |
+|---|---|---|---|
+| `/` | 98 / 100 / 100 / 100 | 2,4 s | 100 / 100 / 100 / 100 |
+| `/projets` | 100 / 100 / 100 / 100 | 1,4 s | 100 / 100 / 100 / 100 |
+| `/projets/declic` | 99 / 100 / 100 / 100 | 2,2 s | 100 / 100 / 100 / 100 |
+| `/a-propos` | 98 / 100 / 100 / 100 | 2,3 s | 100 / 100 / 100 / 100 |
+| `/blog/qdrant-…` | 98 / 100 / 100 / 100 | 2,3 s | 100 / 100 / 100 / 100 |
+| `/contact` | 97 / 100 / 100 / 100 | 2,3 s | 100 / 100 / 100 / 100 |
+
+CLS 0 partout ; TBT ≤ 80 ms.
+
+### Vérifications sur la préversion
+
+- 15 URL : codes attendus (200, 404 pour l'inconnu et les brouillons, 308 pour `/work`, `/resume`, `/fun`).
+- `/api/chat` : `configured:false` puis 503 sans clé. `/api/contact` : 400 avec erreurs par champ. En-têtes de sécurité présents.
+- Suite Playwright Chromium (desktop + Pixel 7) **contre la préversion** : 94 réussis. Les tests de l'API contact sont exclus, car la limite réelle de 5 envois / 10 min s'y applique.
+
+### Navigateurs
+
+| Moteur | Résultat local |
+|---|---|
+| Chromium desktop + Pixel 7 | 98 / 98 |
+| Firefox desktop | tous réussis |
+| WebKit desktop + iPhone 15 | tous réussis ; 3 tests de thème instables sous 3 workers parallèles, réussis en exécution séquentielle |
+
+### Autres changements
+
+- Next.js 16.4 (Turbopack). ESLint React 19 strict **sans aucune exception de règle** (effets réécrits).
+- `npm audit --omit=dev` : **0 vulnérabilité** (`gray-matter` remplacé par `yaml`).
+- KOUD AI : seul le lanceur est chargé sur chaque page ; le panneau est téléchargé au premier usage.
