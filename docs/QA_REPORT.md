@@ -105,3 +105,12 @@ CLS 0 partout ; TBT ≤ 80 ms.
 - Next.js 16.4 (Turbopack). ESLint React 19 strict **sans aucune exception de règle** (effets réécrits).
 - `npm audit --omit=dev` : **0 vulnérabilité** (`gray-matter` remplacé par `yaml`).
 - KOUD AI : seul le lanceur est chargé sur chaque page ; le panneau est téléchargé au premier usage.
+
+---
+
+## 8. Version anglaise (11/10/2026)
+
+- **391 tests réussis, 0 échec** en local sur 5 configurations (Chromium desktop, Pixel 7, Firefox, WebKit, iPhone 15), dont la suite i18n : sélecteur FR⇄EN sur 9 pages, `html lang`, `hreflang`, contenus traduits, redirections des URL internes, 404 anglaise, images Open Graph, sitemap bilingue. Les audits axe portent aussi sur les pages anglaises.
+- **Préversion Netlify** : 27/27 tests i18n et 135 tests Chromium réussis contre l'URL déployée ; routage identique à la version locale.
+- **Lighthouse sur la préversion (anglais)** : `/en` 92 mobile / 100 desktop (LCP mobile 3,0 s, une seule mesure) ; `/en/projects/declic` 99 / 100 ; `/en/about` 99 / 100. Accessibilité, bonnes pratiques et SEO à 100 partout.
+- Bug trouvé et corrigé par les tests : `usePathname()` renvoie le chemin réécrit (`/fr/…`), ce qui cassait le sélecteur de langue et l'état actif de la navigation.

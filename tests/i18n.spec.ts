@@ -29,7 +29,7 @@ test.describe("internationalisation", () => {
       );
 
       await page.getByRole("link", { name: "Lire cette page en français" }).click();
-      await expect(page).toHaveURL(new RegExp(`${fr === "/" ? ":\\d+/$" : `${fr}$`}`));
+      await expect(page).toHaveURL(fr === "/" ? /^https?:\/\/[^/]+\/$/ : new RegExp(`${fr}$`));
     });
   }
 
