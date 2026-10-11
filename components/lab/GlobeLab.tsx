@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { StaticGlobe } from "@/components/home/HeroVisual";
 import { useRootFlags } from "@/lib/hooks";
 
@@ -10,13 +10,15 @@ const HeroScene = dynamic(() => import("@/components/home/HeroScene"), { ssr: fa
 export function GlobeLab() {
   const { lite, reducedMotion } = useRootFlags();
   const [count, setCount] = useState(2600);
-  const webgl = !lite && !reducedMotion;
+  const [unsupported, setUnsupported] = useState(false);
+  const onUnsupported = useCallback(() => setUnsupported(true), []);
+  const webgl = !lite && !reducedMotion && !unsupported;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div className="relative aspect-square overflow-hidden rounded-[var(--radius-lg)] border border-line bg-bg">
         <div className="tech-grid absolute inset-0 opacity-40" aria-hidden />
-        {webgl ? <HeroScene count={count} /> : <StaticGlobe />}
+        {webgl ? <HeroScene count={count} onUnsupported={onUnsupported} /> : <StaticGlobe />}
       </div>
       <div className="flex flex-col justify-center">
         {webgl ? (
@@ -37,7 +39,9 @@ export function GlobeLab() {
           </>
         ) : (
           <p className="rounded-[var(--radius)] border border-line p-4 text-sm text-muted">
-            Version statique affichée : mode performance allégé ou animations réduites actifs. Modifiez-les dans le Theme Studio pour la version WebGL.
+            {unsupported
+              ? "Version statique affichée : votre navigateur n'a pas d'accélération matérielle pour WebGL, et le rendu logiciel serait trop coûteux."
+              : "Version statique affichée : mode performance allégé ou animations réduites actifs. Modifiez-les dans le Theme Studio pour la version WebGL."}
           </p>
         )}
         <ul className="mt-6 space-y-3 text-sm leading-relaxed text-muted">

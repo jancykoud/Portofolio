@@ -55,14 +55,33 @@ const fragment = /* glsl */ `
   }
 `;
 
-export default function HeroScene({ count = 2600 }: { count?: number }) {
+/** True when WebGL would run on the CPU (no GPU): too costly for a decorative scene. */
+function isSoftwareRenderer(gl: WebGLRenderingContext | WebGL2RenderingContext) {
+  const info = gl.getExtension("WEBGL_debug_renderer_info");
+  const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+  return /swiftshader|llvmpipe|software|basic render/i.test(name);
+}
+
+export default function HeroScene({ count = 2600, onUnsupported }: { count?: number; onUnsupported?: () => void }) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "low-power" });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      // failIfMajorPerformanceCaveat: refuse software-rendered contexts.
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "low-power", failIfMajorPerformanceCaveat: true });
+    } catch {
+      onUnsupported?.();
+      return;
+    }
+    if (isSoftwareRenderer(renderer.getContext())) {
+      renderer.dispose();
+      onUnsupported?.();
+      return;
+    }
     const pixelRatio = Math.min(window.devicePixelRatio, 1.75);
     renderer.setPixelRatio(pixelRatio);
     mount.appendChild(renderer.domElement);
@@ -177,7 +196,7 @@ export default function HeroScene({ count = 2600 }: { count?: number }) {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [count]);
+  }, [count, onUnsupported]);
 
   return <div ref={mountRef} className="absolute inset-0 transition-opacity duration-1000 data-[ready=true]:opacity-100 opacity-0" />;
 }

@@ -27,3 +27,16 @@ Chaque phase se termine par : `npm run typecheck && npm run lint && npm run buil
 | Poids de three.js | Import dynamique après `requestIdleCallback`, desktop uniquement, désactivable |
 | Migration Tailwind v4 | Réécriture complète des composants de toute façon (styles inline à éliminer) |
 | Régression d'URL / SEO | Redirections 308 + sitemap |
+
+## État d'avancement (11/10/2026)
+
+| Phase | État |
+|---|---|
+| 0–6 | ✅ Faites |
+| 7 — KOUD AI | ✅ Code + interface + tests en mode non configuré. ⏳ Validation avec une vraie clé |
+| 8 — Vidéo | ✅ Lecteur + storyboard. ⏳ Tournage (contenu) |
+| 9 — Animations | ✅ Reveal, entrée du hero, transitions de filtres, transitions de thème, parallaxe 3D au pointeur. ❌ « Magnetic buttons » non retenus (gêne de précision sur les CTA, aucun gain d'usage) |
+| 10 — A11y / SEO / sécurité / perf | ✅ Voir QA_REPORT |
+| 11 — Tests | ✅ 98 tests Playwright. ⏳ Déploiement (validation requise) |
+
+Hors périmètre ou à venir : traduction anglaise, filtres du blog (inutiles à 3 articles), limitation de débit globale (Upstash), Next 16.

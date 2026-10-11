@@ -74,9 +74,22 @@ test.describe("theme system", () => {
 });
 
 test.describe("motion & performance", () => {
-  test("WebGL scene loads on desktop with full motion", async ({ page }) => {
+  // Headless Chromium has no GPU: WebGL would run on the CPU (SwiftShader), so the
+  // scene must refuse it and keep the static globe. On real GPUs data-scene is "webgl".
+  test("software-only WebGL falls back to the static globe", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("canvas")).toHaveCount(1, { timeout: 10_000 });
+    await page.waitForTimeout(2000);
+    await expect(page.locator("[data-scene]")).toHaveAttribute("data-scene", "static");
+    await expect(page.locator("canvas")).toHaveCount(0);
+    await expect(page.locator("[data-scene] svg circle").first()).toBeAttached();
+  });
+
+  test("WebGL scene renders when a hardware GPU is available", async ({ page, browserName }) => {
+    test.skip(!process.env.GPU_TESTS, "requires a GPU-backed browser (set GPU_TESTS=1 and run headed)");
+    void browserName;
+    await page.goto("/");
+    await expect(page.locator("[data-scene]")).toHaveAttribute("data-scene", "webgl", { timeout: 10_000 });
+    await expect(page.locator("canvas")).toHaveCount(1);
   });
 
   test("reduced motion: no WebGL, static globe instead", async ({ browser }) => {

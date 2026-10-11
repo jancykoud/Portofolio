@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery, useRootFlags } from "@/lib/hooks";
 import { SITE } from "@/content/site";
 
@@ -47,11 +47,15 @@ export function HeroVisual() {
     return () => (window.cancelIdleCallback ?? window.clearTimeout)(id as number);
   }, []);
 
-  const webgl = idle && desktop && !lite && !reducedMotion;
+  const [unsupported, setUnsupported] = useState(false);
+  const onUnsupported = useCallback(() => setUnsupported(true), []);
+  const webgl = idle && desktop && !lite && !reducedMotion && !unsupported;
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[640px]">
-      <div className="absolute inset-[-8%]">{webgl ? <HeroScene /> : <StaticGlobe />}</div>
+      <div className="absolute inset-[-8%]" data-scene={webgl ? "webgl" : "static"}>
+        {webgl ? <HeroScene onUnsupported={onUnsupported} /> : <StaticGlobe />}
+      </div>
 
       {/* Portrait — background removed from the original photo, framed by the globe. */}
       <div className="absolute inset-x-[8%] bottom-0 top-[4%]">

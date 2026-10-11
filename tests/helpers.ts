@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 
-export const PAGES = ["/", "/projets", "/projets/declic", "/projets/congostore", "/a-propos", "/services", "/blog", "/blog/ogc-sensorthings-guide", "/lab", "/video", "/contact"];
+export const PAGES = ["/", "/projets", "/projets/declic", "/projets/congostore", "/a-propos", "/services", "/blog", "/blog/ogc-sensorthings-guide", "/blog/qdrant-recherche-vectorielle", "/lab", "/video", "/contact"];
 
 export async function setPrefs(page: Page, prefs: Record<string, string>) {
   await page.addInitScript((p) => window.localStorage.setItem("koud:prefs", JSON.stringify(p)), prefs);
