@@ -1,0 +1,130 @@
+/*
+ * KOUD — semantic theme tokens.
+ * Components never use raw colors: they consume these variables (via Tailwind
+ * utilities declared in globals.css). Each theme only redefines the variables.
+ * Contrast ratios are asserted in tests/contrast.spec.ts.
+ */
+
+:root,
+:root[data-theme="obsidian"] {
+  color-scheme: dark;
+  --bg: #080b12;
+  --surface: #111827;
+  --surface-2: #1a2333;
+  --line: rgb(148 163 184 / 0.14);
+  --line-strong: rgb(148 163 184 / 0.3);
+  --fg: #f8fafc;
+  --muted: #9aa8bc;
+  --accent: #b9ff66;
+  --accent-ink: #0a0f05;
+  --accent-fg: #b9ff66;
+  --atmo-1: #2563eb;
+  --atmo-2: #8b5cf6;
+  --focus: #b9ff66;
+  --danger: #ff8a8a;
+  --success: #b9ff66;
+  --glass: rgb(17 24 39 / 0.62);
+  --shadow: 0 30px 80px -30px rgb(0 0 0 / 0.75);
+}
+
+:root[data-theme="midnight"] {
+  color-scheme: dark;
+  --bg: #070a14;
+  --surface: #0f172a;
+  --surface-2: #172036;
+  --line: rgb(148 163 184 / 0.14);
+  --line-strong: rgb(148 163 184 / 0.3);
+  --fg: #f8fafc;
+  --muted: #9aa8bc;
+  --accent: #2563eb;
+  --accent-ink: #ffffff;
+  --accent-fg: #7aa7ff;
+  --atmo-1: #2563eb;
+  --atmo-2: #06b6d4;
+  --focus: #7aa7ff;
+  --danger: #ff8a8a;
+  --success: #6ee7b7;
+  --glass: rgb(15 23 42 / 0.62);
+  --shadow: 0 30px 80px -30px rgb(0 0 0 / 0.75);
+}
+
+:root[data-theme="aurora"] {
+  color-scheme: dark;
+  --bg: #0a0b1e;
+  --surface: #14143a;
+  --surface-2: #1e1d4a;
+  --line: rgb(196 181 253 / 0.14);
+  --line-strong: rgb(196 181 253 / 0.3);
+  --fg: #f5f3ff;
+  --muted: #aeabd6;
+  --accent: #7c3aed;
+  --accent-ink: #ffffff;
+  --accent-fg: #c4b5fd;
+  --atmo-1: #8b5cf6;
+  --atmo-2: #2563eb;
+  --focus: #c4b5fd;
+  --danger: #ff9aa2;
+  --success: #86efac;
+  --glass: rgb(20 20 58 / 0.62);
+  --shadow: 0 30px 80px -30px rgb(0 0 0 / 0.75);
+}
+
+:root[data-theme="daylight"] {
+  color-scheme: light;
+  --bg: #f6f7fa;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --line: rgb(15 23 42 / 0.1);
+  --line-strong: rgb(15 23 42 / 0.22);
+  --fg: #0b1020;
+  --muted: #4a5568;
+  --accent: #1d4ed8;
+  --accent-ink: #ffffff;
+  --accent-fg: #1d4ed8;
+  --atmo-1: #2563eb;
+  --atmo-2: #8b5cf6;
+  --focus: #1d4ed8;
+  --danger: #b42318;
+  --success: #067647;
+  --glass: rgb(255 255 255 / 0.72);
+  --shadow: 0 30px 60px -30px rgb(15 23 42 / 0.25);
+}
+
+:root[data-theme="ivory"] {
+  color-scheme: light;
+  --bg: #f3f0e8;
+  --surface: #fbf9f3;
+  --surface-2: #eae5d9;
+  --line: rgb(20 20 20 / 0.1);
+  --line-strong: rgb(20 20 20 / 0.24);
+  --fg: #141414;
+  --muted: #57534e;
+  --accent: #141414;
+  --accent-ink: #f3f0e8;
+  --accent-fg: #141414;
+  --atmo-1: #a16207;
+  --atmo-2: #78716c;
+  --focus: #141414;
+  --danger: #b42318;
+  --success: #3f6212;
+  --glass: rgb(251 249 243 / 0.75);
+  --shadow: 0 30px 60px -30px rgb(20 20 20 / 0.22);
+}
+
+/* ── Modifiers (Theme Studio) ─────────────────────────────── */
+
+:root[data-contrast="high"] {
+  --line: color-mix(in srgb, var(--fg) 26%, transparent);
+  --line-strong: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+:root[data-contrast="high"][data-scheme="dark"] {
+  --muted: #d4dbe6;
+}
+:root[data-contrast="high"][data-scheme="light"] {
+  --muted: #1f2937;
+}
+
+/* Performance mode: no blur, no ambient layers. */
+:root[data-perf="lite"] {
+  --glass: var(--surface);
+}

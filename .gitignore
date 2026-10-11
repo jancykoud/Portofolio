@@ -37,3 +37,11 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Stale nested copy of the old site (contains real secrets) — never commit
+/my-app/
+
+# Playwright
+/test-results/
+/playwright-report/
+/tests/.artifacts/
