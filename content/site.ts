@@ -18,7 +18,7 @@ export const SITE = {
     { label: "CV Développement fullstack", href: "/assets/resume/CV_Koud-UM.pdf" },
     { label: "CV Chef de projet IT", href: "/assets/resume/CV_Koud_IAE.pdf" },
   ],
-  portrait: { src: "/images/profile.jpg", width: 1250, height: 1246, alt: "Portrait de Jancy Koud Banga" },
+  portrait: { src: "/images/profile.jpg", width: 1122, height: 1402, alt: "Portrait de Jancy Koud Banga" },
 } as const;
 
 /** Internal paths (French folders); labels come from the dictionary (nav.<key>). */

@@ -12,7 +12,7 @@ Légende : ✅ sourcé (repo, CV ou site en ligne) · ⚠️ à confirmer par Ja
 | GitHub | github.com/jancykoud | CV, site (200 OK) | ✅ |
 | GitLab | gitlab.com/fridelinbanga | site (200 OK) | ✅ |
 | LinkedIn | linkedin.com/in/jancy-koud-banga | CV | ⚠️ le footer actuel pointe vers `jancykoudbanga` |
-| Portrait | `public/images/profile.jpg` (1250², fond blanc) → `portrait-cutout.png` | repo | ✅ Seul le fond blanc a été retiré (remplissage depuis les bords), sans aucune retouche du visage. La référence montre un portrait studio en plan large sur fond sombre : **à fournir** pour un rendu optimal. L'original n'est pas modifié. |
+| Portrait | `public/images/profile.jpg` (1122×1402, portrait studio professionnel) → `portrait-cutout.png` | repo | ✅ Fond retiré par détourage automatique (Vision, macOS), sans aucune retouche du visage. |
 | YouTube / WhatsApp (maquette) | — | — | ❌ non publiés (aucune URL fournie) |
 | Téléphone | +33 7 88 70 29 85 | CV | Non affiché dans la refonte (anti-spam, conforme à la maquette « Contact ») |
 
